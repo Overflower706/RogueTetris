@@ -16,22 +16,22 @@ public class ViewManager : MonoBehaviour
 
     void Start()
     {
-        // LogicManager 참조 획득
-        logicManager = LogicManager.Instance;
-        if (logicManager == null)
-        {
-            Debug.LogError("LogicManager를 찾을 수 없습니다!");
-            return;
-        }
+        // // LogicManager 참조 획득
+        // logicManager = LogicManager.Instance;
+        // if (logicManager == null)
+        // {
+        //     Debug.LogError("LogicManager를 찾을 수 없습니다!");
+        //     return;
+        // }
 
-        // 입력 핸들러 초기화
-        if (inputHandler != null)
-        {
-            inputHandler.Initialize(logicManager);
-        }
+        // // 입력 핸들러 초기화
+        // if (inputHandler != null)
+        // {
+        //     inputHandler.Initialize(logicManager);
+        // }
 
-        // 초기 상태 설정
-        ShowGameView();
+        // // 초기 상태 설정
+        // ShowGameView();
     }
 
     void Update()

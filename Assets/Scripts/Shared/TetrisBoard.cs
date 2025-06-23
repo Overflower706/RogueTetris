@@ -66,4 +66,13 @@ public class TetrisBoard
             grid[x, HEIGHT - 1] = 0;
         }
     }
+
+    public int GetBlock(int x, int y)
+    {
+        if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
+        {
+            return grid[x, y];
+        }
+        return -1; // 범위 밖은 -1 반환
+    }
 }

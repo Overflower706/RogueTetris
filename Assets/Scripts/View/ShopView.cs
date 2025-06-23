@@ -24,19 +24,19 @@ public class ShopView : MonoBehaviour
 
     void Start()
     {
-        logicManager = LogicManager.Instance;
+        // logicManager = LogicManager.Instance;
 
-        // 닫기 버튼 이벤트
-        if (closeButton != null)
-        {
-            closeButton.onClick.AddListener(CloseShop);
-        }
+        // // 닫기 버튼 이벤트
+        // if (closeButton != null)
+        // {
+        //     closeButton.onClick.AddListener(CloseShop);
+        // }
 
-        // 구매 버튼 이벤트
-        if (purchaseButton != null)
-        {
-            purchaseButton.onClick.AddListener(PurchaseSelectedItem);
-        }
+        // // 구매 버튼 이벤트
+        // if (purchaseButton != null)
+        // {
+        //     purchaseButton.onClick.AddListener(PurchaseSelectedItem);
+        // }
     }
 
     public void UpdateView(Game gameData)

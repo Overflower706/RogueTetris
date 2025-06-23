@@ -24,23 +24,23 @@ public class MenuView : MonoBehaviour
 
     void Start()
     {
-        logicManager = LogicManager.Instance;
+        // logicManager = LogicManager.Instance;
 
-        // 버튼 이벤트 설정
-        if (restartButton != null)
-        {
-            restartButton.onClick.AddListener(RestartGame);
-        }
+        // // 버튼 이벤트 설정
+        // if (restartButton != null)
+        // {
+        //     restartButton.onClick.AddListener(RestartGame);
+        // }
 
-        if (quitButton != null)
-        {
-            quitButton.onClick.AddListener(QuitGame);
-        }
+        // if (quitButton != null)
+        // {
+        //     quitButton.onClick.AddListener(QuitGame);
+        // }
 
-        if (shopButton != null)
-        {
-            shopButton.onClick.AddListener(OpenShop);
-        }
+        // if (shopButton != null)
+        // {
+        //     shopButton.onClick.AddListener(OpenShop);
+        // }
     }
 
     public void UpdateView(Game gameData)
@@ -164,7 +164,7 @@ public class MenuView : MonoBehaviour
     private void QuitGame()
     {
 #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
+        UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
 #endif

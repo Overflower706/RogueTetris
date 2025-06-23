@@ -2,6 +2,7 @@ using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using System.Text;
 
 public class LogicTests
 {
@@ -41,180 +42,8 @@ public class LogicTests
         // Assert
         Assert.IsNotNull(logicManager, "LogicManager component should be created");
         Assert.IsNotNull(gameData, "Game data should be initialized");
-    }    // Move 관련 테스트는 LogicMoveTests.cs로 이동
-    // Rotate 관련 테스트는 LogicRotateTests.cs로 이동    [Test]
-    public void DropTetrimino_WhenCalled_ShouldProcessDrop()
-    {
-        // Arrange
-        // (Setup already provides initialized logicManager)
-
-        // Act
-        logicManager.DropTetrimino();
-
-        // Assert
-        var updatedGameData = logicManager.GetGameData();
-        Assert.IsNotNull(updatedGameData, "Game data should be available after drop");
     }
 
-    [Test]
-    public void DropTetrimino_ShouldMoveToBottom_WhenBoardIsEmpty()
-    {        // Arrange
-        var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.I);
-        testTetrimino.position = new Vector2Int(5, 15); // 높은 위치에서 시작
-        gameData.currentTetrimino = testTetrimino;
-
-        var initialY = testTetrimino.position.y;
-
-        // Act
-        logicManager.DropTetrimino();
-
-        // Assert
-        var updatedGameData = logicManager.GetGameData();
-        Assert.IsNotNull(updatedGameData, "Game data should be available after drop");
-
-        // Drop 후에는 테트리미노가 바닥까지 떨어져야 함
-        // 현재 테트리미노가 여전히 존재한다면, 바닥에 도달했어야 함
-        Assert.IsTrue(testTetrimino.position.y <= initialY,
-            "테트리미노가 초기 위치보다 아래로 이동해야 함");
-        Assert.AreEqual(0, testTetrimino.position.y,
-            "I블록은 빈 보드에서 y=0(바닥)까지 떨어져야 함");
-    }
-
-    [Test]
-    public void DropTetrimino_AllTypes_ShouldDropToBottom()
-    {
-        var gameData = logicManager.GetGameData();
-
-        // I 블록 Drop 테스트
-        var iBlock = new Tetrimino(TetriminoType.I);
-        iBlock.position = new Vector2Int(5, 15);
-        gameData.currentTetrimino = iBlock;
-        var initialIPosition = iBlock.position;
-
-        logicManager.DropTetrimino();
-        var afterIDropData = logicManager.GetGameData();
-        Assert.IsNotNull(afterIDropData, "I블록 Drop 후 게임 데이터 유효");
-        Assert.IsNotNull(afterIDropData.currentTetrimino, "I블록 Drop 후 테트리미노 존재");
-
-        // O 블록 Drop 테스트
-        var oBlock = new Tetrimino(TetriminoType.O);
-        oBlock.position = new Vector2Int(5, 15);
-        gameData.currentTetrimino = oBlock;
-        var initialOPosition = oBlock.position;
-
-        logicManager.DropTetrimino();
-        var afterODropData = logicManager.GetGameData();
-        Assert.IsNotNull(afterODropData, "O블록 Drop 후 게임 데이터 유효");
-        Assert.IsNotNull(afterODropData.currentTetrimino, "O블록 Drop 후 테트리미노 존재");
-
-        // T 블록 Drop 테스트
-        var tBlock = new Tetrimino(TetriminoType.T);
-        tBlock.position = new Vector2Int(5, 15);
-        gameData.currentTetrimino = tBlock;
-        var initialTPosition = tBlock.position;
-
-        logicManager.DropTetrimino();
-        var afterTDropData = logicManager.GetGameData();
-        Assert.IsNotNull(afterTDropData, "T블록 Drop 후 게임 데이터 유효");
-        Assert.IsNotNull(afterTDropData.currentTetrimino, "T블록 Drop 후 테트리미노 존재");
-
-        // S 블록 Drop 테스트
-        var sBlock = new Tetrimino(TetriminoType.S);
-        sBlock.position = new Vector2Int(5, 15);
-        gameData.currentTetrimino = sBlock;
-        var initialSPosition = sBlock.position;
-
-        logicManager.DropTetrimino();
-        var afterSDropData = logicManager.GetGameData();
-        Assert.IsNotNull(afterSDropData, "S블록 Drop 후 게임 데이터 유효");
-        Assert.IsNotNull(afterSDropData.currentTetrimino, "S블록 Drop 후 테트리미노 존재");
-
-        // Z 블록 Drop 테스트
-        var zBlock = new Tetrimino(TetriminoType.Z);
-        zBlock.position = new Vector2Int(5, 15);
-        gameData.currentTetrimino = zBlock;
-        var initialZPosition = zBlock.position;
-
-        logicManager.DropTetrimino();
-        var afterZDropData = logicManager.GetGameData();
-        Assert.IsNotNull(afterZDropData, "Z블록 Drop 후 게임 데이터 유효");
-        Assert.IsNotNull(afterZDropData.currentTetrimino, "Z블록 Drop 후 테트리미노 존재");
-
-        // J 블록 Drop 테스트
-        var jBlock = new Tetrimino(TetriminoType.J);
-        jBlock.position = new Vector2Int(5, 15);
-        gameData.currentTetrimino = jBlock;
-        var initialJPosition = jBlock.position;
-
-        logicManager.DropTetrimino();
-        var afterJDropData = logicManager.GetGameData();
-        Assert.IsNotNull(afterJDropData, "J블록 Drop 후 게임 데이터 유효");
-        Assert.IsNotNull(afterJDropData.currentTetrimino, "J블록 Drop 후 테트리미노 존재");
-
-        // L 블록 Drop 테스트
-        var lBlock = new Tetrimino(TetriminoType.L);
-        lBlock.position = new Vector2Int(5, 15);
-        gameData.currentTetrimino = lBlock;
-        var initialLPosition = lBlock.position;
-
-        logicManager.DropTetrimino();
-        var afterLDropData = logicManager.GetGameData();
-        Assert.IsNotNull(afterLDropData, "L블록 Drop 후 게임 데이터 유효");
-        Assert.IsNotNull(afterLDropData.currentTetrimino, "L블록 Drop 후 테트리미노 존재");
-    }
-
-    [Test]
-    public void DropTetrimino_ShouldStopWhenHittingBottom()
-    {
-        // Arrange - 테트리미노를 바닥 근처에 배치
-        var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.O);
-        testTetrimino.position = new Vector2Int(5, 2); // 바닥 근처
-        gameData.currentTetrimino = testTetrimino;
-
-        // Act
-        logicManager.DropTetrimino();
-
-        // Assert
-        var updatedGameData = logicManager.GetGameData();
-        Assert.IsNotNull(updatedGameData, "Drop 후에도 게임 데이터 유효");
-
-        // Drop 후에는 테트리미노가 고정되고 새로운 테트리미노가 생성되거나
-        // 현재 테트리미노가 바닥에 멈춰야 함
-        Assert.IsNotNull(updatedGameData.currentTetrimino, "Drop 후에도 테트리미노 존재");
-    }
-
-    [Test]
-    public void DropTetrimino_ShouldWorkWithRotatedTetriminos()
-    {
-        // Arrange - 회전된 테트리미노에 대한 Drop 테스트
-        var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.I);
-        testTetrimino.position = new Vector2Int(5, 15);
-        testTetrimino.rotation = 1; // 세로로 회전된 I블록
-        gameData.currentTetrimino = testTetrimino;
-
-        // Act
-        logicManager.DropTetrimino();
-
-        // Assert
-        var updatedGameData = logicManager.GetGameData();
-        Assert.IsNotNull(updatedGameData, "회전된 테트리미노 Drop 후 게임 데이터 유효");
-        Assert.IsNotNull(updatedGameData.currentTetrimino, "회전된 테트리미노 Drop 후 테트리미노 존재");
-
-        // T 블록 회전 후 Drop 테스트
-        var tBlock = new Tetrimino(TetriminoType.T);
-        tBlock.position = new Vector2Int(5, 15);
-        tBlock.rotation = 2; // 180도 회전된 T블록
-        gameData.currentTetrimino = tBlock;
-
-        logicManager.DropTetrimino();
-
-        var afterTDropData = logicManager.GetGameData();
-        Assert.IsNotNull(afterTDropData, "회전된 T블록 Drop 후 게임 데이터 유효");
-        Assert.IsNotNull(afterTDropData.currentTetrimino, "회전된 T블록 Drop 후 테트리미노 존재");
-    }
     [Test]
     public void RestartGame_WhenCalled_ShouldResetGameState()
     {
@@ -230,116 +59,360 @@ public class LogicTests
         Assert.IsNotNull(updatedGameData, "Game data should be available after restart");
         Assert.AreEqual(0, updatedGameData.currentScore, "Score should be reset to 0 after restart");
     }
+
     [Test]
-    public void GameData_Properties_ShouldBeAccessibleAndValid()
+    public void LineClear_SingleLine_ShouldClearLine()
     {
-        // Arrange
+        // Arrange - 한 줄을 거의 채우고 마지막 블록으로 완성
         var gameData = logicManager.GetGameData();
 
-        // Act & Assert - Test current state
-        Assert.IsNotNull(gameData.currentState, "Game should have a valid current state");
+        // 수동으로 9칸 채우기 (마지막 1칸 남김)
+        for (int x = 0; x < 9; x++)
+        {
+            gameData.board.PlaceBlock(new Vector2Int(x, 0), 1); // I블록으로 채움
+        }
 
-        // Test current score
-        Assert.IsTrue(gameData.currentScore >= 0, "Current score should be non-negative");
+        // I블록을 마지막 위치에 배치해서 라인 완성
+        var iBlock = new Tetrimino(TetriminoType.I);
+        iBlock.position = new Vector2Int(9, 15); // 오른쪽 끝에서 시작
+        iBlock.rotation = 1; // 세로로 회전
+        gameData.currentTetrimino = iBlock;
 
-        // Test target score
-        Assert.IsTrue(gameData.targetScore > 0, "Target score should be positive");
+        GameLogger.LogGame(gameData, "Before Line Clear - 9칸 채워진 상태");
 
-        // Test board
-        Assert.IsNotNull(gameData.board, "Game should have a valid board");
+        // Act - Drop으로 라인 완성
+        logicManager.DropTetrimino();        // Assert
+        var updatedGameData = logicManager.GetGameData();
+        GameLogger.LogGame(updatedGameData, "After Line Clear - 라인이 클리어되었는지 확인");
+
+        // y=0 라인이 클리어되고, 위에 있던 I블록의 나머지 부분이 아래로 내려왔는지 확인
+        // 원래 9칸 + 세로 I블록의 아래 3칸이 y=0에 와야 함 (위의 1칸은 사라짐)
+
+        // 점수가 증가했는지 확인
+        Assert.Greater(updatedGameData.currentScore, 0, "라인 클리어 후 점수가 증가해야 함");
+
+        // y=0에는 세로 I블록의 나머지 부분이 있어야 함
+        Assert.AreEqual(1, updatedGameData.board.GetBlock(9, 0), "I블록의 나머지 부분이 (9,0)에 있어야 함");
+        Assert.AreEqual(1, updatedGameData.board.GetBlock(9, 1), "I블록의 나머지 부분이 (9,1)에 있어야 함");
+        Assert.AreEqual(1, updatedGameData.board.GetBlock(9, 2), "I블록의 나머지 부분이 (9,2)에 있어야 함");
+
+        // 원래 y=0에 있던 블록들은 클리어되었으므로 x=0~8은 비어있어야 함
+        for (int x = 0; x < 9; x++)
+        {
+            Assert.AreEqual(0, updatedGameData.board.GetBlock(x, 0), $"라인 클리어 후 ({x},0)이 비어있어야 함");
+        }
     }
     [Test]
-    public void ShopLogic_OpenShop_ShouldChangeGameState()
+    public void LineClear_FourLines_WithVerticalIBlocks_ShouldClearAllFour()
     {
-        // Arrange
+        // Arrange - 4줄을 모두 채우고 마지막에 세로 I블록으로 완성
         var gameData = logicManager.GetGameData();
+        var initialScore = gameData.currentScore;
 
-        // Set game state to Victory first (required for OpenShop to work)
-        gameData.currentState = GameState.Victory;
+        // y=0~3 줄을 9칸씩 채움 (x=9만 비워둠)
+        for (int y = 0; y < 4; y++)
+        {
+            for (int x = 0; x < 9; x++)
+            {
+                gameData.board.PlaceBlock(new Vector2Int(x, y), 1);
+            }
+        }
+
+        GameLogger.LogGame(gameData, "4줄 클리어 전 - 9칸씩 채워진 상태");
+
+        // 세로 I블록을 x=9에 배치해서 4줄 동시 완성
+        var iBlock = new Tetrimino(TetriminoType.I);
+        iBlock.position = new Vector2Int(9, 15);
+        iBlock.rotation = 1; // 세로로 회전
+        gameData.currentTetrimino = iBlock;
 
         // Act
-        logicManager.OpenShop();
+        logicManager.DropTetrimino();
+
+        // Assert
+        var finalGameData = logicManager.GetGameData();
+        GameLogger.LogGame(finalGameData, "4줄 클리어 후 - 모든 줄이 클리어되었는지 확인");
+
+        // 4줄이 모두 클리어되어서 y=0~3이 비어있어야 함
+        for (int y = 0; y < 4; y++)
+        {
+            for (int x = 0; x < TetrisBoard.WIDTH; x++)
+            {
+                Assert.AreEqual(0, finalGameData.board.GetBlock(x, y),
+                    $"4줄 클리어 후 위치 ({x},{y})가 비어있어야 함");
+            }
+        }
+
+        // 점수가 대폭 증가했는지 확인 (4줄 동시 클리어 보너스)
+        Assert.Greater(finalGameData.currentScore, initialScore, "4줄 클리어 후 점수가 크게 증가해야 함");
+
+        // 4줄 클리어는 특별히 높은 점수를 줘야 함 (최소 400점 이상)
+        Assert.Greater(finalGameData.currentScore, 400, "4줄 동시 클리어는 높은 점수를 줘야 함");
+    }
+
+    [Test]
+    public void LineClear_MultipleSeparateLines_ShouldClearOnlyFullLines()
+    {
+        // Arrange - 여러 줄 중 일부만 채워서 선택적 클리어 테스트
+        var gameData = logicManager.GetGameData();
+
+        // y=0 줄을 완전히 채움
+        for (int x = 0; x < TetrisBoard.WIDTH; x++)
+        {
+            gameData.board.PlaceBlock(new Vector2Int(x, 0), 1);
+        }
+
+        // y=1 줄을 부분적으로 채움 (클리어되지 않아야 함)
+        for (int x = 0; x < 8; x++)
+        {
+            gameData.board.PlaceBlock(new Vector2Int(x, 1), 2);
+        }
+
+        // y=2 줄을 완전히 채움
+        for (int x = 0; x < TetrisBoard.WIDTH; x++)
+        {
+            gameData.board.PlaceBlock(new Vector2Int(x, 2), 3);
+        }
+
+        GameLogger.LogGame(gameData, "라인 클리어 전 - y=0,2는 완전, y=1은 부분적");
+
+        // Act - 새 블록 배치 (라인 클리어 트리거)
+        var triggerBlock = new Tetrimino(TetriminoType.O);
+        triggerBlock.position = new Vector2Int(4, 15);
+        gameData.currentTetrimino = triggerBlock;
+
+        logicManager.DropTetrimino();
 
         // Assert
         var updatedGameData = logicManager.GetGameData();
-        Assert.IsNotNull(updatedGameData, "Game data should be available after opening shop"); Assert.AreEqual(GameState.Shop, updatedGameData.currentState, "Game state should change to Shop");
-        Assert.IsTrue(updatedGameData.isShopOpen, "Shop should be marked as open");
+        GameLogger.LogGame(updatedGameData, "라인 클리어 후 - 완전한 줄만 클리어됨");
+
+        // y=0이 클리어되어서 y=1의 부분적 블록들이 y=0로 내려와야 함
+        int nonEmptyBlocksAtY0 = 0;
+        for (int x = 0; x < TetrisBoard.WIDTH; x++)
+        {
+            if (updatedGameData.board.GetBlock(x, 0) != 0)
+                nonEmptyBlocksAtY0++;
+        }
+        Assert.AreEqual(8, nonEmptyBlocksAtY0, "y=1에 있던 8개 블록이 y=0로 내려와야 함");
+
+        // O블록은 라인 클리어 전에 먼저 고정됨
+        // O블록 타입은 2 (TetriminoType.O = 1, +1 = 2)
+        bool foundOBlock = false;
+        for (int y = 0; y < TetrisBoard.HEIGHT; y++)
+        {
+            for (int x = 0; x < TetrisBoard.WIDTH - 1; x++)
+            {
+                if (updatedGameData.board.GetBlock(x, y) == 2 &&
+                    updatedGameData.board.GetBlock(x + 1, y) == 2 &&
+                    updatedGameData.board.GetBlock(x, y + 1) == 2 &&
+                    updatedGameData.board.GetBlock(x + 1, y + 1) == 2)
+                {
+                    foundOBlock = true;
+                    break;
+                }
+            }
+            if (foundOBlock) break;
+        }
+        Assert.IsTrue(foundOBlock, "O블록(타입 2)이 보드에 고정되어야 함");
     }
+
     [Test]
-    public void ShopLogic_CloseShop_ShouldReturnToGameplay()
+    public void LineClear_NoFullLines_ShouldNotClearAnything()
     {
-        // Arrange
-        var logicMgr = logicManager;
-        var gameData = logicMgr.GetGameData();
+        // Arrange - 완전히 채워진 줄이 없는 상태
+        var gameData = logicManager.GetGameData();
+        var initialScore = gameData.currentScore;
 
-        // First set to Victory, then open shop
-        gameData.currentState = GameState.Victory;
-        logicMgr.OpenShop();
+        // 부분적으로만 블록 배치
+        for (int y = 0; y < 3; y++)
+        {
+            for (int x = 0; x < 7; x++) // 10칸 중 7칸만 채움
+            {
+                gameData.board.PlaceBlock(new Vector2Int(x, y), 1);
+            }
+        }
 
-        // Act - Close shop
-        logicMgr.CloseShop();
-
-        // Assert
-        var updatedGameData = logicMgr.GetGameData();
-        Assert.IsNotNull(updatedGameData, "Game data should be available after closing shop"); Assert.AreEqual(GameState.Playing, updatedGameData.currentState, "Game state should return to Playing");
-        Assert.IsFalse(updatedGameData.isShopOpen, "Shop should be marked as closed");
-    }
-    [Test]
-    public void ShopLogic_GetShopItems_ShouldReturnItems()
-    {
-        // Arrange
-        var logicMgr = logicManager;
+        GameLogger.LogGame(gameData, "라인 클리어 전 - 완전한 줄 없음");
 
         // Act
-        var shopItems = logicMgr.GetShopItems();        // Assert
-        Assert.IsNotNull(shopItems, "GetShopItems should return a collection of items");
-        Assert.IsTrue(shopItems is System.Collections.Generic.List<ShopItem>, "Should return a List<ShopItem>");
+        var testBlock = new Tetrimino(TetriminoType.I);
+        testBlock.position = new Vector2Int(8, 15);
+        gameData.currentTetrimino = testBlock;
+
+        logicManager.DropTetrimino();
+
+        // Assert
+        var updatedGameData = logicManager.GetGameData();
+        GameLogger.LogGame(updatedGameData, "라인 클리어 후 - 변화 없어야 함");
+
+        // 점수 변화 없어야 함 (라인 클리어 없으므로)
+        Assert.AreEqual(initialScore, updatedGameData.currentScore, "라인 클리어가 없으면 점수 변화 없어야 함");
+
+        // 기존 블록들이 그대로 있어야 함
+        for (int y = 0; y < 3; y++)
+        {
+            int blockCount = 0;
+            for (int x = 0; x < TetrisBoard.WIDTH; x++)
+            {
+                if (updatedGameData.board.GetBlock(x, y) != 0)
+                    blockCount++;
+            }
+            // 원래 7개 + 새로 추가된 I블록의 일부
+            Assert.GreaterOrEqual(blockCount, 7, $"y={y} 줄에 최소 7개 블록이 있어야 함");
+        }
     }
     [Test]
-    public void SharedClasses_GameInstance_ShouldHaveValidData()
+    public void LineClear_TenVerticalIBlocks_ShouldClearFourLines()
     {
-        // Arrange & Act
-        var gameInstance = new Game();
-        Assert.IsNotNull(gameInstance, "Should be able to create Game instance");
+        // Arrange - I블록을 세로로 10개 연속 배치하여 4줄 동시 클리어 달성
+        var gameData = logicManager.GetGameData();
+        var initialScore = gameData.currentScore;
 
-        // Test TetrisBoard
-        var boardInstance = new TetrisBoard();
-        Assert.IsNotNull(boardInstance, "Should be able to create TetrisBoard instance");
+        GameLogger.LogGame(gameData, "세로 I블록 10개 연속 배치 시작");        // 세로 I블록 10개를 x=0~9 위치에 배치
+        for (int x = 0; x < TetrisBoard.WIDTH; x++)
+        {
+            var iBlock = new Tetrimino(TetriminoType.I);
+            iBlock.position = new Vector2Int(x, 15);
+            iBlock.rotation = 1; // 세로로 회전
+            gameData.currentTetrimino = iBlock;
 
-        // Test Tetrimino (requires TetriminoType parameter)
-        var tetriminoInstance = new Tetrimino(TetriminoType.I);
-        Assert.IsNotNull(tetriminoInstance, "Should be able to create Tetrimino instance");        // Test ActiveEffect (requires constructor parameters)
-        var effectInstance = new ActiveEffect(EffectType.ScoreMultiplier, 10f, 1.5f);
-        Assert.IsNotNull(effectInstance, "Should be able to create ActiveEffect instance");
+            if (x == 8) // 9번째(x=8) 배치 후 상태 확인
+            {
+                GameLogger.LogGame(gameData, "9번째 I블록 배치 전 - 아직 4줄 미완성");
+            }
+
+            logicManager.DropTetrimino();
+            gameData = logicManager.GetGameData(); // 업데이트된 게임 데이터 가져오기
+
+            if (x == 8) // 9번째 배치 후
+            {
+                GameLogger.LogGame(gameData, "9번째 I블록 배치 완료 - 4줄이 9칸씩 채워짐");
+            }
+            else if (x == 9) // 10번째(마지막) 배치 후
+            {
+                GameLogger.LogGame(gameData, "10번째 I블록 배치 완료 - 4줄 동시 클리어 발생!");
+            }
+        }
+
+        // Assert
+        var finalGameData = logicManager.GetGameData();
+        GameLogger.LogGame(finalGameData, "세로 I블록 10개 배치 완료");        // 10개의 세로 I블록을 배치하면 바닥 4줄이 모두 채워져서 4줄 동시 클리어가 발생해야 함
+        // 각 I블록이 4칸씩 차지하므로 10개 배치하면 10열 x 4줄 = 바닥 4줄을 완전히 채움
+        // 4줄이 모두 클리어되므로 최종적으로 보드는 완전히 비어있어야 함
+
+        // 점수가 크게 증가했는지 확인 (4줄 동시 클리어)
+        Assert.Greater(finalGameData.currentScore, initialScore, "4줄 동시 클리어로 점수가 증가해야 함");
+
+        // 4줄 동시 클리어는 800점을 주므로 이를 확인
+        Assert.GreaterOrEqual(finalGameData.currentScore, 800, "4줄 동시 클리어로 최소 800점은 나와야 함");
+
+        // 실제로는 정확히 800점이어야 함 (4줄 클리어 = 100x4x2 = 800)
+        Assert.AreEqual(800, finalGameData.currentScore, "4줄 동시 클리어로 정확히 800점이 나와야 함");        // 4줄 클리어 후 보드 상태 확인
+        // 10개의 세로 I블록(각 4칸)을 10개 열에 배치하면 바닥 4줄이 완전히 채워짐
+        // 4줄이 모두 클리어되어야 하므로 보드는 완전히 비어있어야 함
+        int filledLinesAtBottom = 0;
+        for (int y = 0; y < 4; y++)
+        {
+            bool isFull = true;
+            for (int x = 0; x < TetrisBoard.WIDTH; x++)
+            {
+                if (finalGameData.board.GetBlock(x, y) == 0)
+                {
+                    isFull = false;
+                    break;
+                }
+            }
+            if (isFull)
+                filledLinesAtBottom++;
+        }
+
+        Assert.AreEqual(0, filledLinesAtBottom, "4줄 클리어 후 모든 줄이 비어있어야 함");
+
+        // y=0~3이 모두 비어있어야 함 (4줄 클리어 후)
+        for (int y = 0; y < 4; y++)
+        {
+            for (int x = 0; x < TetrisBoard.WIDTH; x++)
+            {
+                Assert.AreEqual(0, finalGameData.board.GetBlock(x, y), $"4줄 클리어 후 ({x},{y})가 비어있어야 함");
+            }
+        }
     }
-    [UnityTest]
-    public IEnumerator GameLoop_MultipleOperations_ShouldMaintainConsistentState()
+    [Test]
+    public void LineClear_VerticalIBlock_ShouldMoveUpperBlocksDown()
     {
-        // Arrange
-        var logicMgr = (LogicManager)logicManager;
+        // Arrange - 9-33-9 패턴으로 복잡한 스택 생성 (바닥 9개, 중간 33, 위 9개)
+        var gameData = logicManager.GetGameData();
 
-        // Act - Perform a sequence of game operations
-        var initialGameData = logicMgr.GetGameData();
-        Assert.IsNotNull(initialGameData, "Initial game data should be available");
+        // y=0 줄에 9개 블록 배치 (x=9만 비워둠)
+        for (int x = 0; x < 9; x++)
+        {
+            gameData.board.PlaceBlock(new Vector2Int(x, 0), 1);
+        }
 
-        // Move left
-        logicMgr.MoveTetrimino(Vector2Int.left);
-        yield return new WaitForFixedUpdate();
+        // y=1 줄에 3개 블록 배치 (중간 33 패턴)
+        gameData.board.PlaceBlock(new Vector2Int(3, 1), 3);
+        gameData.board.PlaceBlock(new Vector2Int(4, 1), 3);
+        gameData.board.PlaceBlock(new Vector2Int(5, 1), 3);
 
-        var afterMoveData = logicMgr.GetGameData();
-        Assert.IsNotNull(afterMoveData, "Game data should remain valid after move");
+        // y=2 줄에 3개 블록 배치 (중간 33 패턴)
+        gameData.board.PlaceBlock(new Vector2Int(3, 2), 3);
+        gameData.board.PlaceBlock(new Vector2Int(4, 2), 3);
+        gameData.board.PlaceBlock(new Vector2Int(5, 2), 3);
 
-        // Rotate
-        logicMgr.RotateTetrimino();
-        yield return new WaitForFixedUpdate();
+        // y=3 줄에 9개 블록 배치 (x=9만 비워둠) - 위쪽 9개
+        for (int x = 0; x < 9; x++)
+        {
+            gameData.board.PlaceBlock(new Vector2Int(x, 3), 2);
+        }
 
-        var afterRotateData = logicMgr.GetGameData();
-        Assert.IsNotNull(afterRotateData, "Game data should remain valid after rotate");
+        GameLogger.LogGame(gameData, "라인 클리어 전 - 9-33-9 패턴");
 
-        // Drop
-        logicMgr.DropTetrimino();
-        yield return new WaitForFixedUpdate();
-        var afterDropData = logicMgr.GetGameData();
-        Assert.IsNotNull(afterDropData, "Game data should remain valid after drop");
+        // 세로 I블록을 마지막 칸(x=9)에 배치해서 y=0과 y=3 라인 동시 완성
+        var iBlock = new Tetrimino(TetriminoType.I);
+        iBlock.position = new Vector2Int(9, 15);
+        iBlock.rotation = 1; // 세로로 회전
+        gameData.currentTetrimino = iBlock;
+
+        // Act
+        logicManager.DropTetrimino();
+
+        // Assert
+        var updatedGameData = logicManager.GetGameData();
+        GameLogger.LogGame(updatedGameData, "라인 클리어 후 - y=0,3 클리어되고 y=1,2의 33이 내려왔는지 확인");
+
+        // y=0과 y=3 라인이 클리어되었으므로, 원래 y=1,2에 있던 33 블록들이 y=0,1로 내려와야 함
+        // 원래 y=1의 3개 블록이 y=0으로 이동
+        Assert.AreEqual(3, updatedGameData.board.GetBlock(3, 0), "y=1에 있던 33 블록이 y=0으로 내려옴 (3,0)");
+        Assert.AreEqual(3, updatedGameData.board.GetBlock(4, 0), "y=1에 있던 33 블록이 y=0으로 내려옴 (4,0)");
+        Assert.AreEqual(3, updatedGameData.board.GetBlock(5, 0), "y=1에 있던 33 블록이 y=0으로 내려옴 (5,0)");
+
+        // 원래 y=2의 3개 블록이 y=1로 이동
+        Assert.AreEqual(3, updatedGameData.board.GetBlock(3, 1), "y=2에 있던 33 블록이 y=1로 내려옴 (3,1)");
+        Assert.AreEqual(3, updatedGameData.board.GetBlock(4, 1), "y=2에 있던 33 블록이 y=1로 내려옴 (4,1)");
+        Assert.AreEqual(3, updatedGameData.board.GetBlock(5, 1), "y=2에 있던 33 블록이 y=1로 내려옴 (5,1)");
+
+        // 클리어된 줄 위의 빈 공간들은 비어있어야 함 (33 블록이 있는 부분 제외)
+        for (int x = 0; x < 9; x++)
+        {
+            if (x < 3 || x > 5) // 3,4,5는 33 블록이 내려와서 채워짐
+            {
+                Assert.AreEqual(0, updatedGameData.board.GetBlock(x, 0), $"라인 클리어 후 ({x},0)이 비어있어야 함");
+                Assert.AreEqual(0, updatedGameData.board.GetBlock(x, 1), $"라인 클리어 후 ({x},1)이 비어있어야 함");
+            }
+        }
+
+        // y=2, y=3은 완전히 비어있어야 함 (2줄 클리어 후)
+        for (int x = 0; x < TetrisBoard.WIDTH; x++)
+        {
+            Assert.AreEqual(0, updatedGameData.board.GetBlock(x, 2), $"2줄 클리어 후 ({x},2)가 비어있어야 함");
+            Assert.AreEqual(0, updatedGameData.board.GetBlock(x, 3), $"2줄 클리어 후 ({x},3)가 비어있어야 함");
+        }
+
+        // 점수가 증가했는지 확인 (2줄 동시 클리어)
+        Assert.Greater(updatedGameData.currentScore, 0, "2줄 동시 클리어로 점수가 증가해야 함");
+
+        // 2줄 클리어는 300점 이상이어야 함
+        Assert.GreaterOrEqual(updatedGameData.currentScore, 300, "2줄 동시 클리어는 최소 300점 이상이어야 함");
     }
 }

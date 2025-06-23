@@ -110,14 +110,12 @@ public class InputHandler : MonoBehaviour
         moveTimer += Time.deltaTime;
         if (moveTimer >= moveRepeatRate)
         {
-            moveTimer = 0f;
-
-            if (moveInput.x < 0)
+            moveTimer = 0f; if (moveInput.x < 0)
                 logicManager.MoveTetrimino(Vector2Int.left);
             else if (moveInput.x > 0)
                 logicManager.MoveTetrimino(Vector2Int.right);
             else if (moveInput.y < 0)
-                logicManager.MoveTetrimino(Vector2Int.down);
+                logicManager.SoftDrop(); // MoveTetrimino 대신 SoftDrop 사용
         }
     }
 
@@ -146,7 +144,6 @@ public class InputHandler : MonoBehaviour
             logicManager.MoveTetrimino(Vector2Int.right);
         }
     }
-
     private void OnMoveDown(InputAction.CallbackContext context)
     {
         if (!CanHandleGameInput()) return;
@@ -156,7 +153,7 @@ public class InputHandler : MonoBehaviour
         {
             isMoving = true;
             moveTimer = 0f;
-            logicManager.MoveTetrimino(Vector2Int.down);
+            logicManager.SoftDrop(); // MoveTetrimino 대신 SoftDrop 사용
         }
     }
 

@@ -12,7 +12,6 @@ public class TetrisLogic
         this.game = gameData;
         fallTimer = 0f;
     }
-
     public void SpawnNewTetrimino()
     {
         // 다음 테트리미노가 있으면 현재로 이동, 없으면 새로 생성
@@ -25,10 +24,13 @@ public class TetrisLogic
             game.currentTetrimino = GenerateRandomTetrimino();
         }
 
+        // 테트리미노를 스폰 위치에 배치 (상단 중앙)
+        game.currentTetrimino.position = new Vector2Int(TetrisBoard.WIDTH / 2 - 1, TetrisBoard.HEIGHT - 2);
+
         // 새로운 다음 테트리미노 생성
         game.nextTetrimino = GenerateRandomTetrimino();
 
-        // 게임 오버 체크
+        // 게임 오버 체크 - 스폰 위치에서 배치할 수 없으면 게임 오버
         if (!CanPlaceTetrimino(game.currentTetrimino))
         {
             game.currentState = GameState.GameOver;
@@ -85,14 +87,24 @@ public class TetrisLogic
         PlaceTetrimino();
     }
 
+    public void SoftDrop()
+    {
+        if (game.currentTetrimino == null) return;
+
+        // 한 칸 아래로 이동 시도
+        MoveTetrimino(Vector2Int.down);
+
+        // SoftDrop 사용 시 AutoFall 타이머 초기화
+        fallTimer = 0f;
+    }
+
     public void UpdateAutoFall(float deltaTime)
     {
         fallTimer += deltaTime;
 
         if (fallTimer >= fallInterval)
         {
-            MoveTetrimino(Vector2Int.down);
-            fallTimer = 0f;
+            SoftDrop(); // MoveTetrimino 대신 SoftDrop 사용
         }
     }
 
@@ -137,7 +149,6 @@ public class TetrisLogic
         // 새로운 테트리미노 생성
         SpawnNewTetrimino();
     }
-
     private void CheckLineClears()
     {
         List<int> clearedLines = new List<int>();
@@ -157,7 +168,8 @@ public class TetrisLogic
             ScoreLogic scoreLogic = new ScoreLogic(game);
             scoreLogic.ProcessLineClears(clearedLines.Count, game.currentTetrimino);
 
-            // 라인 클리어 실행
+            // 라인 클리어 실행 - 위쪽부터 역순으로 클리어 (인덱스 꼬임 방지)
+            clearedLines.Sort((a, b) => b.CompareTo(a)); // 내림차순 정렬
             foreach (int line in clearedLines)
             {
                 game.board.ClearLine(line);
