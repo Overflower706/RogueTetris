@@ -151,10 +151,10 @@ public class LogicMoveTests
     [Test]
     public void MoveTetrimino_IBlock_WhenAtRightBoundary_ShouldNotMoveOutsideBoard()
     {
-        // Arrange - I 블록은 중심점에서 오른쪽으로 2칸 차지하므로, x=6이 오른쪽 경계 (WIDTH=10)
+        // Arrange - I 블록은 중심점에서 오른쪽으로 2칸 차지하므로, x=7이 오른쪽 경계 (WIDTH=10)
         var gameData = logicManager.GetGameData();
         var testTetrimino = new Tetrimino(TetriminoType.I, 1); // 빨간색
-        testTetrimino.position = new Vector2Int(6, 10); // I블록 오른쪽 경계 (최대 x=9까지 차지)
+        testTetrimino.position = new Vector2Int(7, 10); // I블록 오른쪽 경계 (최대 x=9까지 차지)
         gameData.currentTetrimino = testTetrimino;
 
         var initialPosition = testTetrimino.position;

@@ -157,12 +157,13 @@ public class LogicDropTests
 
         // T블록 회전 후 Drop 종료 상태 로그
         GameLogger.LogGame(afterTDropData, "After Rotated T-Block Drop");        // 180도 회전된 T블록이 고정되었는지 검증
-        // 회전 상태 2에서 T블록은 아래쪽이 열린 형태: (4,1), (5,1), (6,1), (5,0)
-        // T블록의 보드 값은 3임
-        Assert.AreEqual(3, afterTDropData.board.GetBlock(4, 1), "회전된 T블록 좌측 부분 (4,1)에 고정됨");
-        Assert.AreEqual(3, afterTDropData.board.GetBlock(5, 1), "회전된 T블록 중앙 부분 (5,1)에 고정됨");
-        Assert.AreEqual(3, afterTDropData.board.GetBlock(6, 1), "회전된 T블록 우측 부분 (6,1)에 고정됨");
-        Assert.AreEqual(3, afterTDropData.board.GetBlock(5, 0), "회전된 T블록 하단 부분 (5,0)에 고정됨");
+        // 회전 상태 2에서 T블록은 아래쪽이 열린 형태
+        // T블록이 기존 I블록(y=0~3) 위에 착지하므로 y=4,5에 고정됨
+        // T블록의 색상은 2 (초록색)임
+        Assert.AreEqual(2, afterTDropData.board.GetBlock(4, 5), "회전된 T블록 좌측 부분 (4,5)에 고정됨");
+        Assert.AreEqual(2, afterTDropData.board.GetBlock(5, 5), "회전된 T블록 중앙 부분 (5,5)에 고정됨");
+        Assert.AreEqual(2, afterTDropData.board.GetBlock(6, 5), "회전된 T블록 우측 부분 (6,5)에 고정됨");
+        Assert.AreEqual(2, afterTDropData.board.GetBlock(5, 4), "회전된 T블록 하단 부분 (5,4)에 고정됨");
     }
 
     [Test]
