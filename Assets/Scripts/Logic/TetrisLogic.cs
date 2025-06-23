@@ -106,14 +106,13 @@ public class TetrisLogic
         {
             SoftDrop(); // MoveTetrimino 대신 SoftDrop 사용
         }
-    }
-
-    private Tetrimino GenerateRandomTetrimino()
+    }    private Tetrimino GenerateRandomTetrimino()
     {
         TetriminoType[] types = { TetriminoType.I, TetriminoType.O, TetriminoType.T,
                                  TetriminoType.S, TetriminoType.Z, TetriminoType.J, TetriminoType.L };
         TetriminoType randomType = types[Random.Range(0, types.Length)];
-        return new Tetrimino(randomType);
+        int randomColor = Random.Range(1, 5); // 1~4 중 랜덤 색상
+        return new Tetrimino(randomType, randomColor);
     }
 
     private bool CanPlaceTetrimino(Tetrimino tetrimino)
@@ -129,18 +128,16 @@ public class TetrisLogic
         }
 
         return true;
-    }
-
-    private void PlaceTetrimino()
+    }    private void PlaceTetrimino()
     {
         if (game.currentTetrimino == null) return;
 
         Vector2Int[] positions = game.currentTetrimino.GetWorldPositions();
 
-        // 보드에 테트리미노 블록 배치
+        // 보드에 테트리미노 블록 배치 (color 속성 사용)
         foreach (Vector2Int pos in positions)
         {
-            game.board.PlaceBlock(pos, (int)game.currentTetrimino.type + 1);
+            game.board.PlaceBlock(pos, game.currentTetrimino.color);
         }
 
         // 라인 클리어 체크

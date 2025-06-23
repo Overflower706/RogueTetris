@@ -7,16 +7,17 @@ public class Tetrimino
     public Vector2Int position;
     public int rotation; // 0, 1, 2, 3 (90도씩 회전)
     public Vector2Int[] shape; // 테트리미노의 블록 위치들
+    public int color; // 1~4 색상 값
 
     // 테트리미노 효과 (발라트로 라이크 요소)
     public TetriminoEffect effect;
-
-    public Tetrimino(TetriminoType tetriminoType)
+    public Tetrimino(TetriminoType tetriminoType, int color)
     {
         type = tetriminoType;
         position = new Vector2Int(TetrisBoard.WIDTH / 2, TetrisBoard.HEIGHT - 1);
         rotation = 0;
         shape = GetShapeForType(tetriminoType);
+        this.color = color;
         effect = new TetriminoEffect(); // 기본 효과 없음
     }
 

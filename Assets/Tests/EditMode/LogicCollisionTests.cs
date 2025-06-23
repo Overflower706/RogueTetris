@@ -42,10 +42,8 @@ public class LogicCollisionTests
         gameData.board.PlaceBlock(new Vector2Int(4, 0), 1);
         gameData.board.PlaceBlock(new Vector2Int(5, 0), 1);
         gameData.board.PlaceBlock(new Vector2Int(6, 0), 1);
-        gameData.board.PlaceBlock(new Vector2Int(7, 0), 1);
-
-        // I 블록을 높은 위치에서 시작
-        var testTetrimino = new Tetrimino(TetriminoType.I);
+        gameData.board.PlaceBlock(new Vector2Int(7, 0), 1);        // I 블록을 높은 위치에서 시작
+        var testTetrimino = new Tetrimino(TetriminoType.I, 1); // 빨간색
         testTetrimino.position = new Vector2Int(5, 15);
         gameData.currentTetrimino = testTetrimino;
 
@@ -62,9 +60,7 @@ public class LogicCollisionTests
         GameLogger.LogGame(updatedGameData, "After Drop with Fixed Blocks");
 
         // 새로운 테트리미노가 스폰되었어야 함 (이전 테트리미노가 고정됨)
-        Assert.IsNotNull(updatedGameData.currentTetrimino, "새로운 테트리미노가 스폰되어야 함");
-
-        // 보드에 블록들이 고정되었는지 확인 (y=1에 I블록이 배치되었어야 함)
+        Assert.IsNotNull(updatedGameData.currentTetrimino, "새로운 테트리미노가 스폰되어야 함");        // 보드에 블록들이 고정되었는지 확인 (y=1에 I블록이 배치되었어야 함)
         Assert.AreEqual(1, updatedGameData.board.GetBlock(4, 1), "y=1에 I블록이 고정되어야 함");
         Assert.AreEqual(1, updatedGameData.board.GetBlock(5, 1), "y=1에 I블록이 고정되어야 함");
         Assert.AreEqual(1, updatedGameData.board.GetBlock(6, 1), "y=1에 I블록이 고정되어야 함");
@@ -78,10 +74,8 @@ public class LogicCollisionTests
         var gameData = logicManager.GetGameData();
 
         // 오른쪽에 블록 배치 (x=7에 블록)
-        gameData.board.PlaceBlock(new Vector2Int(7, 10), 1);
-
-        // I 블록을 블록 근처에 배치
-        var testTetrimino = new Tetrimino(TetriminoType.I);
+        gameData.board.PlaceBlock(new Vector2Int(7, 10), 1);        // I 블록을 블록 근처에 배치
+        var testTetrimino = new Tetrimino(TetriminoType.I, 2); // 초록색
         testTetrimino.position = new Vector2Int(5, 10); // I블록: 4,5,6,7 위치
         gameData.currentTetrimino = testTetrimino;
 
@@ -111,10 +105,8 @@ public class LogicCollisionTests
         var gameData = logicManager.GetGameData();
 
         // I블록이 세로로 회전할 때 필요한 공간에 블록 배치
-        gameData.board.PlaceBlock(new Vector2Int(5, 11), 1); // 위쪽 블록
-
-        // I 블록을 가로 상태로 배치
-        var testTetrimino = new Tetrimino(TetriminoType.I);
+        gameData.board.PlaceBlock(new Vector2Int(5, 11), 1); // 위쪽 블록        // I 블록을 가로 상태로 배치
+        var testTetrimino = new Tetrimino(TetriminoType.I, 3); // 파란색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0; // 가로 상태
         gameData.currentTetrimino = testTetrimino;
@@ -141,26 +133,20 @@ public class LogicCollisionTests
     [Test]
     public void DropTetrimino_AllTypes_ShouldDropToCorrectPosition()
     {
-        var gameData = logicManager.GetGameData();
-
-        // I 블록 Drop 테스트 - 빈 보드에서 바닥까지
-        var iBlock = new Tetrimino(TetriminoType.I);
+        var gameData = logicManager.GetGameData();        // I 블록 Drop 테스트 - 빈 보드에서 바닥까지
+        var iBlock = new Tetrimino(TetriminoType.I, 4); // 노란색
         iBlock.position = new Vector2Int(5, 15);
         gameData.currentTetrimino = iBlock;
 
         GameLogger.LogGame(gameData, "Before I-Block Drop");
         logicManager.DropTetrimino();
         var afterIDropData = logicManager.GetGameData();
-        GameLogger.LogGame(afterIDropData, "After I-Block Drop");
-
-        // I블록이 바닥(y=0)에 고정되었는지 확인
-        Assert.AreEqual(1, afterIDropData.board.GetBlock(4, 0), "I블록 좌측이 바닥에 고정되어야 함");
-        Assert.AreEqual(1, afterIDropData.board.GetBlock(5, 0), "I블록 중앙이 바닥에 고정되어야 함");
-        Assert.AreEqual(1, afterIDropData.board.GetBlock(6, 0), "I블록 우측이 바닥에 고정되어야 함");
-        Assert.AreEqual(1, afterIDropData.board.GetBlock(7, 0), "I블록 우측끝이 바닥에 고정되어야 함");
-
-        // O 블록 Drop 테스트 - I블록 위에 쌓이기
-        var oBlock = new Tetrimino(TetriminoType.O);
+        GameLogger.LogGame(afterIDropData, "After I-Block Drop");        // I블록이 바닥(y=0)에 고정되었는지 확인
+        Assert.AreEqual(4, afterIDropData.board.GetBlock(4, 0), "I블록 좌측이 바닥에 고정되어야 함");
+        Assert.AreEqual(4, afterIDropData.board.GetBlock(5, 0), "I블록 중앙이 바닥에 고정되어야 함");
+        Assert.AreEqual(4, afterIDropData.board.GetBlock(6, 0), "I블록 우측이 바닥에 고정되어야 함");
+        Assert.AreEqual(4, afterIDropData.board.GetBlock(7, 0), "I블록 우측끝이 바닥에 고정되어야 함");// O 블록 Drop 테스트 - I블록 위에 쌓이기
+        var oBlock = new Tetrimino(TetriminoType.O, 1); // 빨간색
         oBlock.position = new Vector2Int(5, 15);
         gameData = afterIDropData; // 이전 상태 이어받기
         gameData.currentTetrimino = oBlock;
@@ -168,13 +154,11 @@ public class LogicCollisionTests
         GameLogger.LogGame(gameData, "Before O-Block Drop");
         logicManager.DropTetrimino();
         var afterODropData = logicManager.GetGameData();
-        GameLogger.LogGame(afterODropData, "After O-Block Drop");
-
-        // O블록이 I블록 위(y=1)에 고정되었는지 확인
-        Assert.AreEqual(2, afterODropData.board.GetBlock(5, 1), "O블록 좌하단이 I블록 위에 고정되어야 함");
-        Assert.AreEqual(2, afterODropData.board.GetBlock(6, 1), "O블록 우하단이 I블록 위에 고정되어야 함");
-        Assert.AreEqual(2, afterODropData.board.GetBlock(5, 2), "O블록 좌상단이 고정되어야 함");
-        Assert.AreEqual(2, afterODropData.board.GetBlock(6, 2), "O블록 우상단이 고정되어야 함");
+        GameLogger.LogGame(afterODropData, "After O-Block Drop");        // O블록이 I블록 위(y=1)에 고정되었는지 확인
+        Assert.AreEqual(1, afterODropData.board.GetBlock(5, 1), "O블록 좌하단이 I블록 위에 고정되어야 함");
+        Assert.AreEqual(1, afterODropData.board.GetBlock(6, 1), "O블록 우하단이 I블록 위에 고정되어야 함");
+        Assert.AreEqual(1, afterODropData.board.GetBlock(5, 2), "O블록 좌상단이 고정되어야 함");
+        Assert.AreEqual(1, afterODropData.board.GetBlock(6, 2), "O블록 우상단이 고정되어야 함");
     }
 
     [Test]
@@ -187,10 +171,8 @@ public class LogicCollisionTests
         gameData.board.PlaceBlock(new Vector2Int(3, 0), 1);
         gameData.board.PlaceBlock(new Vector2Int(4, 0), 1);
         gameData.board.PlaceBlock(new Vector2Int(6, 0), 1);
-        gameData.board.PlaceBlock(new Vector2Int(7, 0), 1);
-
-        // T 블록 배치
-        var tBlock = new Tetrimino(TetriminoType.T);
+        gameData.board.PlaceBlock(new Vector2Int(7, 0), 1);        // T 블록 배치
+        var tBlock = new Tetrimino(TetriminoType.T, 2); // 초록색
         tBlock.position = new Vector2Int(5, 15);
         tBlock.rotation = 0; // ㅗ 모양
         gameData.currentTetrimino = tBlock;
@@ -205,22 +187,18 @@ public class LogicCollisionTests
         var updatedGameData = logicManager.GetGameData();
 
         // Drop 후 상태 로그
-        GameLogger.LogGame(updatedGameData, "After T-Block Drop into Gap");
-
-        // T블록이 틈새에 정확히 들어갔는지 확인 (y=0에 중앙 블록, y=1에 상단 블록)
-        Assert.AreEqual(3, updatedGameData.board.GetBlock(4, 0), "T블록 좌측 하단이 바닥에 고정되어야 함");
-        Assert.AreEqual(3, updatedGameData.board.GetBlock(5, 0), "T블록 중앙 하단이 바닥에 고정되어야 함");
-        Assert.AreEqual(3, updatedGameData.board.GetBlock(6, 0), "T블록 우측 하단이 바닥에 고정되어야 함");
-        Assert.AreEqual(3, updatedGameData.board.GetBlock(5, 1), "T블록 상단이 y=1에 고정되어야 함");
+        GameLogger.LogGame(updatedGameData, "After T-Block Drop into Gap");        // T블록이 틈새에 정확히 들어갔는지 확인 (y=0에 중앙 블록, y=1에 상단 블록)
+        Assert.AreEqual(2, updatedGameData.board.GetBlock(4, 0), "T블록 좌측 하단이 바닥에 고정되어야 함");
+        Assert.AreEqual(2, updatedGameData.board.GetBlock(5, 0), "T블록 중앙 하단이 바닥에 고정되어야 함");
+        Assert.AreEqual(2, updatedGameData.board.GetBlock(6, 0), "T블록 우측 하단이 바닥에 고정되어야 함");
+        Assert.AreEqual(2, updatedGameData.board.GetBlock(5, 1), "T블록 상단이 y=1에 고정되어야 함");
     }
 
     [Test]
     public void DropTetrimino_RotatedIBlock_ShouldDropVertically()
     {
         // Arrange - 세로로 회전된 I블록 테스트
-        var gameData = logicManager.GetGameData();
-
-        var testTetrimino = new Tetrimino(TetriminoType.I);
+        var gameData = logicManager.GetGameData(); var testTetrimino = new Tetrimino(TetriminoType.I, 3); // 파란색
         testTetrimino.position = new Vector2Int(5, 15);
         testTetrimino.rotation = 1; // 세로 방향
         gameData.currentTetrimino = testTetrimino;
@@ -235,13 +213,11 @@ public class LogicCollisionTests
         var updatedGameData = logicManager.GetGameData();
 
         // Drop 후 상태 로그
-        GameLogger.LogGame(updatedGameData, "After Vertical I-Block Drop");
-
-        // 세로 I블록이 x=5 열의 y=0,1,2,3에 고정되었는지 확인
-        Assert.AreEqual(1, updatedGameData.board.GetBlock(5, 0), "세로 I블록 하단이 바닥에 고정되어야 함");
-        Assert.AreEqual(1, updatedGameData.board.GetBlock(5, 1), "세로 I블록이 y=1에 고정되어야 함");
-        Assert.AreEqual(1, updatedGameData.board.GetBlock(5, 2), "세로 I블록이 y=2에 고정되어야 함");
-        Assert.AreEqual(1, updatedGameData.board.GetBlock(5, 3), "세로 I블록이 y=3에 고정되어야 함");
+        GameLogger.LogGame(updatedGameData, "After Vertical I-Block Drop");        // 세로 I블록이 x=5 열의 y=0,1,2,3에 고정되었는지 확인
+        Assert.AreEqual(3, updatedGameData.board.GetBlock(5, 0), "세로 I블록 하단이 바닥에 고정되어야 함");
+        Assert.AreEqual(3, updatedGameData.board.GetBlock(5, 1), "세로 I블록이 y=1에 고정되어야 함");
+        Assert.AreEqual(3, updatedGameData.board.GetBlock(5, 2), "세로 I블록이 y=2에 고정되어야 함");
+        Assert.AreEqual(3, updatedGameData.board.GetBlock(5, 3), "세로 I블록이 y=3에 고정되어야 함");
     }
 
     [Test]
@@ -252,10 +228,8 @@ public class LogicCollisionTests
 
         // 장애물 배치: ㅁ_ㅁ 형태
         gameData.board.PlaceBlock(new Vector2Int(3, 10), 1);
-        gameData.board.PlaceBlock(new Vector2Int(5, 10), 1);
-
-        // L 블록을 중간에 배치
-        var lBlock = new Tetrimino(TetriminoType.L);
+        gameData.board.PlaceBlock(new Vector2Int(5, 10), 1);        // L 블록을 중간에 배치
+        var lBlock = new Tetrimino(TetriminoType.L, 4); // 노란색
         lBlock.position = new Vector2Int(4, 11);
         gameData.currentTetrimino = lBlock;
 

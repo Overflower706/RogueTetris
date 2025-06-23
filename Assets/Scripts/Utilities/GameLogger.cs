@@ -85,22 +85,21 @@ public static class GameLogger
             {
                 Vector2Int pos = new Vector2Int(x, y);
                 bool isCurrentTetrimino = IsPositionInTetrimino(pos, currentTetriminoPositions);
-                bool isBoardBlock = board.grid[x, y] != 0;
-
-                if (isCurrentTetrimino && isBoardBlock)
+                bool isBoardBlock = board.grid[x, y] != 0; if (isCurrentTetrimino && isBoardBlock)
                 {
                     // 겹침 (충돌 상황)
                     sb.Append("XX");
                 }
                 else if (isCurrentTetrimino)
                 {
-                    // 현재 테트리미노
-                    sb.Append("■");
+                    // 현재 테트리미노 - 색상별 표시
+                    sb.Append($"<color={GetColorName(currentTetrimino.color)}>■</color>");
                 }
                 else if (isBoardBlock)
                 {
-                    // 고정된 블록
-                    sb.Append("▨");
+                    // 고정된 블록 - 색상별 표시
+                    int blockColor = board.grid[x, y];
+                    sb.Append($"<color={GetColorName(blockColor)}>▨</color>");
                 }
                 else
                 {
@@ -136,7 +135,7 @@ public static class GameLogger
         }
         sb.AppendLine();        // 범례
         sb.AppendLine();
-        sb.AppendLine("Legend: ■=Current, ▨=Fixed, XX=Collision, □=Empty");
+        sb.AppendLine("Legend: <color=red>■</color>=빨강(1), <color=green>■</color>=초록(2), <color=blue>■</color>=파랑(3), <color=yellow>■</color>=노랑(4), XX=Collision, □=Empty");
 
         return sb.ToString();
     }
@@ -251,5 +250,28 @@ public static class GameLogger
     public static string GetBoardString(TetrisBoard board, Tetrimino currentTetrimino = null)
     {
         return VisualizeBoard(board, currentTetrimino);
+    }
+    private static string GetColorSymbol(int color)
+    {
+        switch (color)
+        {
+            case 1: return "<color=red>■■</color>"; // 빨강
+            case 2: return "<color=green>■■</color>"; // 초록
+            case 3: return "<color=blue>■■</color>"; // 파랑
+            case 4: return "<color=yellow>■■</color>"; // 노랑
+            default: return "▨▨"; // 알 수 없는 색상 (고정된 블록 기호)
+        }
+    }
+
+    private static string GetColorName(int color)
+    {
+        switch (color)
+        {
+            case 1: return "red";
+            case 2: return "green";
+            case 3: return "blue";
+            case 4: return "yellow";
+            default: return "white";
+        }
     }
 }

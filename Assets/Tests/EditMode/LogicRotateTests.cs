@@ -33,10 +33,9 @@ public class LogicRotateTests
     }
     [Test]
     public void RotateTetrimino_WhenCalled_ShouldUpdateTetriminoRotation()
-    {
-        // Arrange
+    {        // Arrange
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.T);
+        var testTetrimino = new Tetrimino(TetriminoType.T, 1); // 빨간색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0; // 초기 회전 상태
         gameData.currentTetrimino = testTetrimino;
@@ -62,10 +61,9 @@ public class LogicRotateTests
     }
     [Test]
     public void RotateTetrimino_IBlock_ShouldRotateCorrectly()
-    {
-        // Arrange - I 블록은 가로/세로 회전이 명확함
+    {        // Arrange - I 블록은 가로/세로 회전이 명확함
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.I);
+        var testTetrimino = new Tetrimino(TetriminoType.I, 2); // 초록색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0; // 가로 상태
         gameData.currentTetrimino = testTetrimino;
@@ -95,10 +93,9 @@ public class LogicRotateTests
     }
     [Test]
     public void RotateTetrimino_TBlock_AllRotations_ShouldWork()
-    {
-        // Arrange - T 블록의 4가지 회전 상태 모두 테스트
+    {        // Arrange - T 블록의 4가지 회전 상태 모두 테스트
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.T);
+        var testTetrimino = new Tetrimino(TetriminoType.T, 3); // 파란색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0;
         gameData.currentTetrimino = testTetrimino;
@@ -150,13 +147,12 @@ public class LogicRotateTests
     }
     [Test]
     public void RotateTetrimino_OBlock_ShouldRotateButMaintainSquareShape()
-    {
-        // Arrange - O 블록은 정사각형이므로 회전해도 같은 모양 유지 (하지만 좌표는 변할 수 있음)
+    {        // Arrange - O 블록은 정사각형이므로 회전해도 같은 모양 유지 (하지만 좌표는 변할 수 있음)
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.O);
+        var testTetrimino = new Tetrimino(TetriminoType.O, 4); // 노란색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0;
-        gameData.currentTetrimino = testTetrimino;        // 초기 위치 확인: [(5,10), (6,10), (5,11), (6,11)]
+        gameData.currentTetrimino = testTetrimino;// 초기 위치 확인: [(5,10), (6,10), (5,11), (6,11)]
         var initialPositions = testTetrimino.GetWorldPositions();
         Assert.AreEqual(4, initialPositions.Length, "O블록 초기에 4개 위치");
         Assert.Contains(new Vector2Int(5, 10), initialPositions, "초기 (5,10) 위치");
@@ -199,10 +195,9 @@ public class LogicRotateTests
     }
     [Test]
     public void RotateTetrimino_JBlock_ShouldRotateCorrectly()
-    {
-        // Arrange - J 블록 회전 테스트
+    {        // Arrange - J 블록 회전 테스트
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.J);
+        var testTetrimino = new Tetrimino(TetriminoType.J, 1); // 빨간색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0;
         gameData.currentTetrimino = testTetrimino;
@@ -237,10 +232,9 @@ public class LogicRotateTests
     }
     [Test]
     public void RotateTetrimino_LBlock_ShouldRotateCorrectly()
-    {
-        // Arrange - L 블록 회전 테스트
+    {        // Arrange - L 블록 회전 테스트
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.L);
+        var testTetrimino = new Tetrimino(TetriminoType.L, 2); // 초록색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0;
         gameData.currentTetrimino = testTetrimino;
@@ -269,10 +263,9 @@ public class LogicRotateTests
     }
     [Test]
     public void RotateTetrimino_SBlock_ShouldRotateCorrectly()
-    {
-        // Arrange - S 블록 회전 테스트
+    {        // Arrange - S 블록 회전 테스트
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.S);
+        var testTetrimino = new Tetrimino(TetriminoType.S, 3); // 파란색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0;
         gameData.currentTetrimino = testTetrimino;
@@ -296,10 +289,9 @@ public class LogicRotateTests
     }
     [Test]
     public void RotateTetrimino_ZBlock_ShouldRotateCorrectly()
-    {
-        // Arrange - Z 블록 회전 테스트
+    {        // Arrange - Z 블록 회전 테스트
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.Z);
+        var testTetrimino = new Tetrimino(TetriminoType.Z, 4); // 노란색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0;
         gameData.currentTetrimino = testTetrimino;
@@ -323,10 +315,9 @@ public class LogicRotateTests
     }
     [Test]
     public void RotateTetrimino_WhenBlocked_ShouldNotRotate()
-    {
-        // Arrange - 회전이 막힌 상황에서 회전 시도
+    {        // Arrange - 회전이 막힌 상황에서 회전 시도
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.I);
+        var testTetrimino = new Tetrimino(TetriminoType.I, 1); // 빨간색
         testTetrimino.position = new Vector2Int(0, 10); // 벽 근처에 배치
         testTetrimino.rotation = 0; // 가로 상태
         gameData.currentTetrimino = testTetrimino;
@@ -355,10 +346,9 @@ public class LogicRotateTests
     }
     [Test]
     public void RotateTetrimino_WhenAtBoundary_ShouldHandleCorrectly()
-    {
-        // Arrange - 경계 근처에서 회전 테스트
+    {        // Arrange - 경계 근처에서 회전 테스트
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.T);
+        var testTetrimino = new Tetrimino(TetriminoType.T, 2); // 초록색
         testTetrimino.position = new Vector2Int(1, 10); // 왼쪽 경계 근처
         testTetrimino.rotation = 0;
         gameData.currentTetrimino = testTetrimino;

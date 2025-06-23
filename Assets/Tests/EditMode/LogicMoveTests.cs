@@ -36,7 +36,7 @@ public class LogicMoveTests
     {
         // Arrange
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.I);
+        var testTetrimino = new Tetrimino(TetriminoType.I, 1); // 빨간색
         testTetrimino.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = testTetrimino;
 
@@ -67,7 +67,7 @@ public class LogicMoveTests
     {
         // Arrange
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.J);
+        var testTetrimino = new Tetrimino(TetriminoType.J, 2); // 초록색
         testTetrimino.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = testTetrimino;
 
@@ -99,7 +99,7 @@ public class LogicMoveTests
     {
         // Arrange - I 블록은 중심점에서 왼쪽으로 1칸 차지하므로, x=1이 왼쪽 경계
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.I);
+        var testTetrimino = new Tetrimino(TetriminoType.I, 3); // 파란색
         testTetrimino.position = new Vector2Int(1, 10); // I블록이 경계에 딱 맞는 위치
         gameData.currentTetrimino = testTetrimino;
 
@@ -126,7 +126,7 @@ public class LogicMoveTests
     {
         // Arrange - J 블록도 중심점에서 왼쪽으로 1칸 차지하므로, x=1이 왼쪽 경계
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.J);
+        var testTetrimino = new Tetrimino(TetriminoType.J, 4); // 노란색
         testTetrimino.position = new Vector2Int(1, 10); // J블록이 경계에 딱 맞는 위치
         gameData.currentTetrimino = testTetrimino;
 
@@ -151,10 +151,10 @@ public class LogicMoveTests
     [Test]
     public void MoveTetrimino_IBlock_WhenAtRightBoundary_ShouldNotMoveOutsideBoard()
     {
-        // Arrange - I 블록은 중심점에서 오른쪽으로 2칸 차지하므로, x=7이 오른쪽 경계 (WIDTH=10)
+        // Arrange - I 블록은 중심점에서 오른쪽으로 2칸 차지하므로, x=6이 오른쪽 경계 (WIDTH=10)
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.I);
-        testTetrimino.position = new Vector2Int(7, 10); // I블록 오른쪽 경계 (2칸이 8,9 차지)
+        var testTetrimino = new Tetrimino(TetriminoType.I, 1); // 빨간색
+        testTetrimino.position = new Vector2Int(6, 10); // I블록 오른쪽 경계 (최대 x=9까지 차지)
         gameData.currentTetrimino = testTetrimino;
 
         var initialPosition = testTetrimino.position;
@@ -180,7 +180,7 @@ public class LogicMoveTests
     {
         // Arrange - O 블록은 중점이 왼쪽 아래 모서리라서 x=0부터 시작 가능
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.O);
+        var testTetrimino = new Tetrimino(TetriminoType.O, 2); // 초록색
         testTetrimino.position = new Vector2Int(0, 10); // O블록은 x=0에서 시작 가능
         gameData.currentTetrimino = testTetrimino;
 
@@ -207,7 +207,7 @@ public class LogicMoveTests
     {
         // Arrange - O블록은 중심점에서 오른쪽으로 1칸 차지하므로, x=8이 오른쪽 경계
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.O);
+        var testTetrimino = new Tetrimino(TetriminoType.O, 3); // 파란색
         testTetrimino.position = new Vector2Int(8, 10); // O블록 오른쪽 경계
         gameData.currentTetrimino = testTetrimino;
 
@@ -234,7 +234,7 @@ public class LogicMoveTests
     {
         // Arrange - T 블록은 대칭적으로 좌우 1칸씩 차지
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.T);
+        var testTetrimino = new Tetrimino(TetriminoType.T, 4); // 노란색
         testTetrimino.position = new Vector2Int(1, 10); // T블록 왼쪽 경계
         gameData.currentTetrimino = testTetrimino;
 
@@ -261,7 +261,7 @@ public class LogicMoveTests
     {
         // Arrange - 바닥 경계 테스트 (y=0이 바닥)
         var gameData = logicManager.GetGameData();
-        var testTetrimino = new Tetrimino(TetriminoType.I);
+        var testTetrimino = new Tetrimino(TetriminoType.I, 1); // 빨강색
         testTetrimino.position = new Vector2Int(5, 0); // 바닥에 위치
         gameData.currentTetrimino = testTetrimino;
 
@@ -291,16 +291,15 @@ public class LogicMoveTests
         // 각 테트리미노 타입별로 실제 경계값 검증
 
         // I 블록: 왼쪽 -1, 오른쪽 +2
-        var iBlock = new Tetrimino(TetriminoType.I);
+        var iBlock = new Tetrimino(TetriminoType.I, 1);
         iBlock.position = new Vector2Int(1, 10); // 왼쪽 경계
         var iPositions = iBlock.GetWorldPositions();
         var minX = System.Linq.Enumerable.Min(iPositions, pos => pos.x);
-        var maxX = System.Linq.Enumerable.Max(iPositions, pos => pos.x);
-        Assert.AreEqual(0, minX, "I블록이 x=1에 있을 때 최소 x는 0이어야 함");
+        var maxX = System.Linq.Enumerable.Max(iPositions, pos => pos.x); Assert.AreEqual(0, minX, "I블록이 x=1에 있을 때 최소 x는 0이어야 함");
         Assert.AreEqual(3, maxX, "I블록이 x=1에 있을 때 최대 x는 3이어야 함");
 
         // O 블록: 왼쪽 0, 오른쪽 +1
-        var oBlock = new Tetrimino(TetriminoType.O);
+        var oBlock = new Tetrimino(TetriminoType.O, 2);
         oBlock.position = new Vector2Int(0, 10); // 왼쪽 경계
         var oPositions = oBlock.GetWorldPositions();
         minX = System.Linq.Enumerable.Min(oPositions, pos => pos.x);
@@ -309,7 +308,7 @@ public class LogicMoveTests
         Assert.AreEqual(1, maxX, "O블록이 x=0에 있을 때 최대 x는 1이어야 함");
 
         // J 블록: 왼쪽 -1, 오른쪽 +1
-        var jBlock = new Tetrimino(TetriminoType.J);
+        var jBlock = new Tetrimino(TetriminoType.J, 3);
         jBlock.position = new Vector2Int(1, 10); // 왼쪽 경계
         var jPositions = jBlock.GetWorldPositions();
         minX = System.Linq.Enumerable.Min(jPositions, pos => pos.x);
@@ -318,7 +317,7 @@ public class LogicMoveTests
         Assert.AreEqual(2, maxX, "J블록이 x=1에 있을 때 최대 x는 2이어야 함");
 
         // T 블록: 왼쪽 -1, 오른쪽 +1
-        var tBlock = new Tetrimino(TetriminoType.T);
+        var tBlock = new Tetrimino(TetriminoType.T, 4);
         tBlock.position = new Vector2Int(1, 10); // 왼쪽 경계
         var tPositions = tBlock.GetWorldPositions();
         minX = System.Linq.Enumerable.Min(tPositions, pos => pos.x);
@@ -329,10 +328,9 @@ public class LogicMoveTests
 
     [Test]
     public void MoveTetrimino_RightBoundary_AllBlocks_ShouldBehaveCorrectly()
-    {
-        // I 블록 - 오른쪽 경계 x=7 (최대 x가 9가 됨)
+    {        // I 블록 - 오른쪽 경계 x=7 (중심점에서 +2까지 차지하므로 최대 x=9)
         var gameData = logicManager.GetGameData();
-        var iBlock = new Tetrimino(TetriminoType.I);
+        var iBlock = new Tetrimino(TetriminoType.I, 1);
         iBlock.position = new Vector2Int(7, 10);
         gameData.currentTetrimino = iBlock;
         logicManager.MoveTetrimino(Vector2Int.right);
@@ -340,7 +338,7 @@ public class LogicMoveTests
             "I블록은 x=7에서 오른쪽으로 이동할 수 없어야 함");
 
         // O 블록 - 오른쪽 경계 x=8 (최대 x가 9가 됨)
-        var oBlock = new Tetrimino(TetriminoType.O);
+        var oBlock = new Tetrimino(TetriminoType.O, 2);
         oBlock.position = new Vector2Int(8, 10);
         gameData.currentTetrimino = oBlock;
         logicManager.MoveTetrimino(Vector2Int.right);
@@ -348,7 +346,7 @@ public class LogicMoveTests
             "O블록은 x=8에서 오른쪽으로 이동할 수 없어야 함");
 
         // J 블록 - 오른쪽 경계 x=8 (최대 x가 9가 됨)
-        var jBlock = new Tetrimino(TetriminoType.J);
+        var jBlock = new Tetrimino(TetriminoType.J, 3);
         jBlock.position = new Vector2Int(8, 10);
         gameData.currentTetrimino = jBlock;
         logicManager.MoveTetrimino(Vector2Int.right);
@@ -360,7 +358,7 @@ public class LogicMoveTests
     public void Tetrimino_AllShapes_ShouldHaveCorrectOccupiedPositions()
     {
         // Test O 블록
-        var oBlock = new Tetrimino(TetriminoType.O);
+        var oBlock = new Tetrimino(TetriminoType.O, 4);
         oBlock.position = new Vector2Int(5, 10);
         var oPositions = oBlock.GetWorldPositions();
 
@@ -371,7 +369,7 @@ public class LogicMoveTests
         Assert.Contains(new Vector2Int(6, 11), oPositions, "O블록 오른쪽 위");
 
         // Test T 블록
-        var tBlock = new Tetrimino(TetriminoType.T);
+        var tBlock = new Tetrimino(TetriminoType.T, 1);
         tBlock.position = new Vector2Int(5, 10);
         var tPositions = tBlock.GetWorldPositions();
 
@@ -382,7 +380,7 @@ public class LogicMoveTests
         Assert.Contains(new Vector2Int(5, 11), tPositions, "T블록 위쪽");
 
         // Test S 블록
-        var sBlock = new Tetrimino(TetriminoType.S);
+        var sBlock = new Tetrimino(TetriminoType.S, 2);
         sBlock.position = new Vector2Int(5, 10);
         var sPositions = sBlock.GetWorldPositions();
 
@@ -393,18 +391,17 @@ public class LogicMoveTests
         Assert.Contains(new Vector2Int(6, 11), sPositions, "S블록 오른쪽 위");
 
         // Test I 블록
-        var iBlock = new Tetrimino(TetriminoType.I);
+        var iBlock = new Tetrimino(TetriminoType.I, 3);
         iBlock.position = new Vector2Int(5, 10);
         var iPositions = iBlock.GetWorldPositions();
 
-        Assert.AreEqual(4, iPositions.Length, "I블록은 4개 위치를 차지해야 함");
-        Assert.Contains(new Vector2Int(4, 10), iPositions, "I블록은 중심점-1 위치를 차지해야 함");
+        Assert.AreEqual(4, iPositions.Length, "I블록은 4개 위치를 차지해야 함"); Assert.Contains(new Vector2Int(4, 10), iPositions, "I블록은 중심점-1 위치를 차지해야 함");
         Assert.Contains(new Vector2Int(5, 10), iPositions, "I블록은 중심점 위치를 차지해야 함");
         Assert.Contains(new Vector2Int(6, 10), iPositions, "I블록은 중심점+1 위치를 차지해야 함");
         Assert.Contains(new Vector2Int(7, 10), iPositions, "I블록은 중심점+2 위치를 차지해야 함");
 
         // Test J 블록
-        var jBlock = new Tetrimino(TetriminoType.J);
+        var jBlock = new Tetrimino(TetriminoType.J, 4);
         jBlock.position = new Vector2Int(5, 10);
         var jPositions = jBlock.GetWorldPositions();
 
@@ -420,7 +417,7 @@ public class LogicMoveTests
         var gameData = logicManager.GetGameData();
 
         // I 블록 왼쪽 이동 테스트
-        var iBlock = new Tetrimino(TetriminoType.I);
+        var iBlock = new Tetrimino(TetriminoType.I, 1);
         iBlock.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = iBlock;
         GameLogger.LogGame(gameData, "Before I-Block Left Movement");
@@ -431,7 +428,7 @@ public class LogicMoveTests
             "I블록이 왼쪽으로 정상 이동해야 함");
 
         // O 블록 왼쪽 이동 테스트
-        var oBlock = new Tetrimino(TetriminoType.O);
+        var oBlock = new Tetrimino(TetriminoType.O, 2);
         oBlock.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = oBlock;
         GameLogger.LogGame(gameData, "Before O-Block Left Movement");
@@ -442,7 +439,7 @@ public class LogicMoveTests
             "O블록이 왼쪽으로 정상 이동해야 함");
 
         // T 블록 왼쪽 이동 테스트
-        var tBlock = new Tetrimino(TetriminoType.T);
+        var tBlock = new Tetrimino(TetriminoType.T, 3);
         tBlock.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = tBlock;
         GameLogger.LogGame(gameData, "Before T-Block Left Movement");
@@ -453,7 +450,7 @@ public class LogicMoveTests
             "T블록이 왼쪽으로 정상 이동해야 함");
 
         // S 블록 왼쪽 이동 테스트
-        var sBlock = new Tetrimino(TetriminoType.S);
+        var sBlock = new Tetrimino(TetriminoType.S, 4);
         sBlock.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = sBlock;
         GameLogger.LogGame(gameData, "Before S-Block Left Movement");
@@ -464,7 +461,7 @@ public class LogicMoveTests
             "S블록이 왼쪽으로 정상 이동해야 함");
 
         // Z 블록 왼쪽 이동 테스트
-        var zBlock = new Tetrimino(TetriminoType.Z);
+        var zBlock = new Tetrimino(TetriminoType.Z, 1);
         zBlock.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = zBlock;
         GameLogger.LogGame(gameData, "Before Z-Block Left Movement");
@@ -475,7 +472,7 @@ public class LogicMoveTests
             "Z블록이 왼쪽으로 정상 이동해야 함");
 
         // J 블록 왼쪽 이동 테스트
-        var jBlock = new Tetrimino(TetriminoType.J);
+        var jBlock = new Tetrimino(TetriminoType.J, 2);
         jBlock.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = jBlock;
         GameLogger.LogGame(gameData, "Before J-Block Left Movement");
@@ -486,7 +483,7 @@ public class LogicMoveTests
             "J블록이 왼쪽으로 정상 이동해야 함");
 
         // L 블록 왼쪽 이동 테스트
-        var lBlock = new Tetrimino(TetriminoType.L);
+        var lBlock = new Tetrimino(TetriminoType.L, 3);
         lBlock.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = lBlock;
         GameLogger.LogGame(gameData, "Before L-Block Left Movement");
@@ -502,7 +499,7 @@ public class LogicMoveTests
         var gameData = logicManager.GetGameData();
 
         // I 블록 오른쪽 이동 테스트
-        var iBlock = new Tetrimino(TetriminoType.I);
+        var iBlock = new Tetrimino(TetriminoType.I, 4);
         iBlock.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = iBlock;
         GameLogger.LogGame(gameData, "Before I-Block Right Movement");
@@ -513,7 +510,7 @@ public class LogicMoveTests
             "I블록이 오른쪽으로 정상 이동해야 함");
 
         // O 블록 오른쪽 이동 테스트
-        var oBlock = new Tetrimino(TetriminoType.O);
+        var oBlock = new Tetrimino(TetriminoType.O, 1);
         oBlock.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = oBlock;
         GameLogger.LogGame(gameData, "Before O-Block Right Movement");
@@ -524,7 +521,7 @@ public class LogicMoveTests
             "O블록이 오른쪽으로 정상 이동해야 함");
 
         // T 블록 오른쪽 이동 테스트
-        var tBlock = new Tetrimino(TetriminoType.T);
+        var tBlock = new Tetrimino(TetriminoType.T, 2);
         tBlock.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = tBlock;
         GameLogger.LogGame(gameData, "Before T-Block Right Movement");
@@ -535,7 +532,7 @@ public class LogicMoveTests
             "T블록이 오른쪽으로 정상 이동해야 함");
 
         // S 블록 오른쪽 이동 테스트
-        var sBlock = new Tetrimino(TetriminoType.S);
+        var sBlock = new Tetrimino(TetriminoType.S, 3);
         sBlock.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = sBlock;
         GameLogger.LogGame(gameData, "Before S-Block Right Movement");
@@ -546,7 +543,7 @@ public class LogicMoveTests
             "S블록이 오른쪽으로 정상 이동해야 함");
 
         // Z 블록 오른쪽 이동 테스트
-        var zBlock = new Tetrimino(TetriminoType.Z);
+        var zBlock = new Tetrimino(TetriminoType.Z, 4);
         zBlock.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = zBlock;
         GameLogger.LogGame(gameData, "Before Z-Block Right Movement");
@@ -557,7 +554,7 @@ public class LogicMoveTests
             "Z블록이 오른쪽으로 정상 이동해야 함");
 
         // J 블록 오른쪽 이동 테스트
-        var jBlock = new Tetrimino(TetriminoType.J);
+        var jBlock = new Tetrimino(TetriminoType.J, 1);
         jBlock.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = jBlock;
         GameLogger.LogGame(gameData, "Before J-Block Right Movement");
@@ -568,7 +565,7 @@ public class LogicMoveTests
             "J블록이 오른쪽으로 정상 이동해야 함");
 
         // L 블록 오른쪽 이동 테스트
-        var lBlock = new Tetrimino(TetriminoType.L);
+        var lBlock = new Tetrimino(TetriminoType.L, 2);
         lBlock.position = new Vector2Int(5, 10);
         gameData.currentTetrimino = lBlock;
         GameLogger.LogGame(gameData, "Before L-Block Right Movement");
@@ -585,7 +582,7 @@ public class LogicMoveTests
         var gameData = logicManager.GetGameData();
 
         // I 블록 - 왼쪽 경계 x=1
-        var iBlock = new Tetrimino(TetriminoType.I);
+        var iBlock = new Tetrimino(TetriminoType.I, 3);
         iBlock.position = new Vector2Int(1, 10);
         gameData.currentTetrimino = iBlock;
         logicManager.MoveTetrimino(Vector2Int.left);
@@ -593,7 +590,7 @@ public class LogicMoveTests
             "I블록은 x=1에서 왼쪽으로 이동할 수 없어야 함");
 
         // O 블록 - 왼쪽 경계 x=0
-        var oBlock = new Tetrimino(TetriminoType.O);
+        var oBlock = new Tetrimino(TetriminoType.O, 2);
         oBlock.position = new Vector2Int(0, 10);
         gameData.currentTetrimino = oBlock;
         logicManager.MoveTetrimino(Vector2Int.left);
@@ -601,7 +598,7 @@ public class LogicMoveTests
             "O블록은 x=0에서 왼쪽으로 이동할 수 없어야 함");
 
         // T 블록 - 왼쪽 경계 x=1
-        var tBlock = new Tetrimino(TetriminoType.T);
+        var tBlock = new Tetrimino(TetriminoType.T, 4);
         tBlock.position = new Vector2Int(1, 10);
         gameData.currentTetrimino = tBlock;
         logicManager.MoveTetrimino(Vector2Int.left);
@@ -609,7 +606,7 @@ public class LogicMoveTests
             "T블록은 x=1에서 왼쪽으로 이동할 수 없어야 함");
 
         // S 블록 - 왼쪽 경계 x=1
-        var sBlock = new Tetrimino(TetriminoType.S);
+        var sBlock = new Tetrimino(TetriminoType.S, 1);
         sBlock.position = new Vector2Int(1, 10);
         gameData.currentTetrimino = sBlock;
         logicManager.MoveTetrimino(Vector2Int.left);
@@ -617,7 +614,7 @@ public class LogicMoveTests
             "S블록은 x=1에서 왼쪽으로 이동할 수 없어야 함");
 
         // Z 블록 - 왼쪽 경계 x=1
-        var zBlock = new Tetrimino(TetriminoType.Z);
+        var zBlock = new Tetrimino(TetriminoType.Z, 2);
         zBlock.position = new Vector2Int(1, 10);
         gameData.currentTetrimino = zBlock;
         logicManager.MoveTetrimino(Vector2Int.left);
@@ -625,7 +622,7 @@ public class LogicMoveTests
             "Z블록은 x=1에서 왼쪽으로 이동할 수 없어야 함");
 
         // J 블록 - 왼쪽 경계 x=1
-        var jBlock = new Tetrimino(TetriminoType.J);
+        var jBlock = new Tetrimino(TetriminoType.J, 3);
         jBlock.position = new Vector2Int(1, 10);
         gameData.currentTetrimino = jBlock;
         logicManager.MoveTetrimino(Vector2Int.left);
@@ -633,7 +630,7 @@ public class LogicMoveTests
             "J블록은 x=1에서 왼쪽으로 이동할 수 없어야 함");
 
         // L 블록 - 왼쪽 경계 x=1
-        var lBlock = new Tetrimino(TetriminoType.L);
+        var lBlock = new Tetrimino(TetriminoType.L, 4);
         lBlock.position = new Vector2Int(1, 10);
         gameData.currentTetrimino = lBlock;
         logicManager.MoveTetrimino(Vector2Int.left);
@@ -644,10 +641,8 @@ public class LogicMoveTests
     [Test]
     public void MoveTetrimino_AllTypes_RightBoundaryBehavior_ShouldWork()
     {
-        var gameData = logicManager.GetGameData();
-
-        // I 블록 - 오른쪽 경계 x=7 (WIDTH=10, I블록은 +2까지 차지)
-        var iBlock = new Tetrimino(TetriminoType.I);
+        var gameData = logicManager.GetGameData();        // I 블록 - 오른쪽 경계 x=7 (WIDTH=10, I블록은 +2까지 차지)
+        var iBlock = new Tetrimino(TetriminoType.I, 1);
         iBlock.position = new Vector2Int(7, 10);
         gameData.currentTetrimino = iBlock;
         logicManager.MoveTetrimino(Vector2Int.right);
@@ -655,7 +650,7 @@ public class LogicMoveTests
             "I블록은 x=7에서 오른쪽으로 이동할 수 없어야 함");
 
         // O 블록 - 오른쪽 경계 x=8 (O블록은 +1까지 차지)
-        var oBlock = new Tetrimino(TetriminoType.O);
+        var oBlock = new Tetrimino(TetriminoType.O, 2);
         oBlock.position = new Vector2Int(8, 10);
         gameData.currentTetrimino = oBlock;
         logicManager.MoveTetrimino(Vector2Int.right);
@@ -663,7 +658,7 @@ public class LogicMoveTests
             "O블록은 x=8에서 오른쪽으로 이동할 수 없어야 함");
 
         // T 블록 - 오른쪽 경계 x=8 (T블록은 +1까지 차지)
-        var tBlock = new Tetrimino(TetriminoType.T);
+        var tBlock = new Tetrimino(TetriminoType.T, 4);
         tBlock.position = new Vector2Int(8, 10);
         gameData.currentTetrimino = tBlock;
         logicManager.MoveTetrimino(Vector2Int.right);
@@ -671,7 +666,7 @@ public class LogicMoveTests
             "T블록은 x=8에서 오른쪽으로 이동할 수 없어야 함");
 
         // S 블록 - 오른쪽 경계 x=8 (S블록은 +1까지 차지)
-        var sBlock = new Tetrimino(TetriminoType.S);
+        var sBlock = new Tetrimino(TetriminoType.S, 3);
         sBlock.position = new Vector2Int(8, 10);
         gameData.currentTetrimino = sBlock;
         logicManager.MoveTetrimino(Vector2Int.right);
@@ -679,7 +674,7 @@ public class LogicMoveTests
             "S블록은 x=8에서 오른쪽으로 이동할 수 없어야 함");
 
         // Z 블록 - 오른쪽 경계 x=8 (Z블록은 +1까지 차지)
-        var zBlock = new Tetrimino(TetriminoType.Z);
+        var zBlock = new Tetrimino(TetriminoType.Z, 2);
         zBlock.position = new Vector2Int(8, 10);
         gameData.currentTetrimino = zBlock;
         logicManager.MoveTetrimino(Vector2Int.right);
@@ -687,7 +682,7 @@ public class LogicMoveTests
             "Z블록은 x=8에서 오른쪽으로 이동할 수 없어야 함");
 
         // J 블록 - 오른쪽 경계 x=8 (J블록은 +1까지 차지)
-        var jBlock = new Tetrimino(TetriminoType.J);
+        var jBlock = new Tetrimino(TetriminoType.J, 1);
         jBlock.position = new Vector2Int(8, 10);
         gameData.currentTetrimino = jBlock;
         logicManager.MoveTetrimino(Vector2Int.right);
@@ -695,7 +690,7 @@ public class LogicMoveTests
             "J블록은 x=8에서 오른쪽으로 이동할 수 없어야 함");
 
         // L 블록 - 오른쪽 경계 x=8 (L블록은 +1까지 차지)
-        var lBlock = new Tetrimino(TetriminoType.L);
+        var lBlock = new Tetrimino(TetriminoType.L, 4);
         lBlock.position = new Vector2Int(8, 10);
         gameData.currentTetrimino = lBlock;
         logicManager.MoveTetrimino(Vector2Int.right);

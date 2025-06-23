@@ -70,10 +70,8 @@ public class LogicTests
         for (int x = 0; x < 9; x++)
         {
             gameData.board.PlaceBlock(new Vector2Int(x, 0), 1); // I블록으로 채움
-        }
-
-        // I블록을 마지막 위치에 배치해서 라인 완성
-        var iBlock = new Tetrimino(TetriminoType.I);
+        }        // I블록을 마지막 위치에 배치해서 라인 완성
+        var iBlock = new Tetrimino(TetriminoType.I, 1); // 빨간색
         iBlock.position = new Vector2Int(9, 15); // 오른쪽 끝에서 시작
         iBlock.rotation = 1; // 세로로 회전
         gameData.currentTetrimino = iBlock;
@@ -89,9 +87,7 @@ public class LogicTests
         // 원래 9칸 + 세로 I블록의 아래 3칸이 y=0에 와야 함 (위의 1칸은 사라짐)
 
         // 점수가 증가했는지 확인
-        Assert.Greater(updatedGameData.currentScore, 0, "라인 클리어 후 점수가 증가해야 함");
-
-        // y=0에는 세로 I블록의 나머지 부분이 있어야 함
+        Assert.Greater(updatedGameData.currentScore, 0, "라인 클리어 후 점수가 증가해야 함");        // y=0에는 세로 I블록의 나머지 부분이 있어야 함
         Assert.AreEqual(1, updatedGameData.board.GetBlock(9, 0), "I블록의 나머지 부분이 (9,0)에 있어야 함");
         Assert.AreEqual(1, updatedGameData.board.GetBlock(9, 1), "I블록의 나머지 부분이 (9,1)에 있어야 함");
         Assert.AreEqual(1, updatedGameData.board.GetBlock(9, 2), "I블록의 나머지 부분이 (9,2)에 있어야 함");
@@ -118,10 +114,8 @@ public class LogicTests
             }
         }
 
-        GameLogger.LogGame(gameData, "4줄 클리어 전 - 9칸씩 채워진 상태");
-
-        // 세로 I블록을 x=9에 배치해서 4줄 동시 완성
-        var iBlock = new Tetrimino(TetriminoType.I);
+        GameLogger.LogGame(gameData, "4줄 클리어 전 - 9칸씩 채워진 상태");        // 세로 I블록을 x=9에 배치해서 4줄 동시 완성
+        var iBlock = new Tetrimino(TetriminoType.I, 2); // 초록색
         iBlock.position = new Vector2Int(9, 15);
         iBlock.rotation = 1; // 세로로 회전
         gameData.currentTetrimino = iBlock;
@@ -174,10 +168,8 @@ public class LogicTests
             gameData.board.PlaceBlock(new Vector2Int(x, 2), 3);
         }
 
-        GameLogger.LogGame(gameData, "라인 클리어 전 - y=0,2는 완전, y=1은 부분적");
-
-        // Act - 새 블록 배치 (라인 클리어 트리거)
-        var triggerBlock = new Tetrimino(TetriminoType.O);
+        GameLogger.LogGame(gameData, "라인 클리어 전 - y=0,2는 완전, y=1은 부분적");        // Act - 새 블록 배치 (라인 클리어 트리거)
+        var triggerBlock = new Tetrimino(TetriminoType.O, 3); // 파란색
         triggerBlock.position = new Vector2Int(4, 15);
         gameData.currentTetrimino = triggerBlock;
 
@@ -194,19 +186,17 @@ public class LogicTests
             if (updatedGameData.board.GetBlock(x, 0) != 0)
                 nonEmptyBlocksAtY0++;
         }
-        Assert.AreEqual(8, nonEmptyBlocksAtY0, "y=1에 있던 8개 블록이 y=0로 내려와야 함");
-
-        // O블록은 라인 클리어 전에 먼저 고정됨
-        // O블록 타입은 2 (TetriminoType.O = 1, +1 = 2)
+        Assert.AreEqual(8, nonEmptyBlocksAtY0, "y=1에 있던 8개 블록이 y=0로 내려와야 함");        // O블록은 라인 클리어 전에 먼저 고정됨
+        // O블록 color는 3 (파란색)
         bool foundOBlock = false;
         for (int y = 0; y < TetrisBoard.HEIGHT; y++)
         {
             for (int x = 0; x < TetrisBoard.WIDTH - 1; x++)
             {
-                if (updatedGameData.board.GetBlock(x, y) == 2 &&
-                    updatedGameData.board.GetBlock(x + 1, y) == 2 &&
-                    updatedGameData.board.GetBlock(x, y + 1) == 2 &&
-                    updatedGameData.board.GetBlock(x + 1, y + 1) == 2)
+                if (updatedGameData.board.GetBlock(x, y) == 3 &&
+                    updatedGameData.board.GetBlock(x + 1, y) == 3 &&
+                    updatedGameData.board.GetBlock(x, y + 1) == 3 &&
+                    updatedGameData.board.GetBlock(x + 1, y + 1) == 3)
                 {
                     foundOBlock = true;
                     break;
@@ -214,7 +204,7 @@ public class LogicTests
             }
             if (foundOBlock) break;
         }
-        Assert.IsTrue(foundOBlock, "O블록(타입 2)이 보드에 고정되어야 함");
+        Assert.IsTrue(foundOBlock, "O블록(color 3)이 보드에 고정되어야 함");
     }
 
     [Test]
@@ -233,10 +223,8 @@ public class LogicTests
             }
         }
 
-        GameLogger.LogGame(gameData, "라인 클리어 전 - 완전한 줄 없음");
-
-        // Act
-        var testBlock = new Tetrimino(TetriminoType.I);
+        GameLogger.LogGame(gameData, "라인 클리어 전 - 완전한 줄 없음");        // Act
+        var testBlock = new Tetrimino(TetriminoType.I, 4); // 노란색
         testBlock.position = new Vector2Int(8, 15);
         gameData.currentTetrimino = testBlock;
 
@@ -272,7 +260,7 @@ public class LogicTests
         GameLogger.LogGame(gameData, "세로 I블록 10개 연속 배치 시작");        // 세로 I블록 10개를 x=0~9 위치에 배치
         for (int x = 0; x < TetrisBoard.WIDTH; x++)
         {
-            var iBlock = new Tetrimino(TetriminoType.I);
+            var iBlock = new Tetrimino(TetriminoType.I, 1); // 빨간색
             iBlock.position = new Vector2Int(x, 15);
             iBlock.rotation = 1; // 세로로 회전
             gameData.currentTetrimino = iBlock;
@@ -366,10 +354,8 @@ public class LogicTests
             gameData.board.PlaceBlock(new Vector2Int(x, 3), 2);
         }
 
-        GameLogger.LogGame(gameData, "라인 클리어 전 - 9-33-9 패턴");
-
-        // 세로 I블록을 마지막 칸(x=9)에 배치해서 y=0과 y=3 라인 동시 완성
-        var iBlock = new Tetrimino(TetriminoType.I);
+        GameLogger.LogGame(gameData, "라인 클리어 전 - 9-33-9 패턴");        // 세로 I블록을 마지막 칸(x=9)에 배치해서 y=0과 y=3 라인 동시 완성
+        var iBlock = new Tetrimino(TetriminoType.I, 2); // 초록색
         iBlock.position = new Vector2Int(9, 15);
         iBlock.rotation = 1; // 세로로 회전
         gameData.currentTetrimino = iBlock;
