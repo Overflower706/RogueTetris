@@ -1,124 +1,315 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InputHandler : MonoBehaviour
 {
     private LogicManager logicManager;
+    private PlayerInput playerInput;
 
-    [Header("Input Settings")]
-    public KeyCode leftKey = KeyCode.A;
-    public KeyCode rightKey = KeyCode.D;
-    public KeyCode downKey = KeyCode.S;
-    public KeyCode rotateKey = KeyCode.W;
-    public KeyCode hardDropKey = KeyCode.Space;
-    public KeyCode restartKey = KeyCode.R;
-
-    private float moveRepeatRate = 0.1f; // 키를 누르고 있을 때 반복 속도
+    [Header("Movement Settings")]
+    private float moveRepeatRate = 0.1f;
     private float moveTimer = 0f;
     private bool isMoving = false;
+    private Vector2 moveInput;
 
     public void Initialize(LogicManager logic)
     {
         logicManager = logic;
+        SetupPlayerInput();
+    }
+
+    private void SetupPlayerInput()
+    {
+        playerInput = GetComponent<PlayerInput>();
+        if (playerInput == null)
+        {
+            playerInput = gameObject.AddComponent<PlayerInput>();
+        }
+
+        // Input Actions 에셋 로드
+        var inputActions = Resources.Load<InputActionAsset>("TetrisInputActions");
+        if (inputActions != null)
+        {
+            playerInput.actions = inputActions;
+        }
+
+        // 액션 맵 설정 (실제 게임에서는 GameInitializer에서 수행)
+        playerInput.currentActionMap = playerInput.actions.FindActionMap("Gameplay");
+
+        SetupInputCallbacks();
+    }
+
+    private void SetupInputCallbacks()
+    {
+        if (playerInput == null || playerInput.actions == null) return;
+
+        var gameplayMap = playerInput.actions.FindActionMap("Gameplay");
+        if (gameplayMap == null) return;
+
+        // 이동 입력 설정
+        var moveLeftAction = gameplayMap.FindAction("MoveLeft");
+        if (moveLeftAction != null)
+        {
+            moveLeftAction.performed += OnMoveLeft;
+            moveLeftAction.canceled += OnMoveStop;
+        }
+
+        var moveRightAction = gameplayMap.FindAction("MoveRight");
+        if (moveRightAction != null)
+        {
+            moveRightAction.performed += OnMoveRight;
+            moveRightAction.canceled += OnMoveStop;
+        }
+
+        var moveDownAction = gameplayMap.FindAction("MoveDown");
+        if (moveDownAction != null)
+        {
+            moveDownAction.performed += OnMoveDown;
+            moveDownAction.canceled += OnMoveStop;
+        }
+
+        // 액션 입력 설정
+        var rotateAction = gameplayMap.FindAction("Rotate");
+        if (rotateAction != null)
+        {
+            rotateAction.performed += OnRotate;
+        }
+
+        var hardDropAction = gameplayMap.FindAction("HardDrop");
+        if (hardDropAction != null)
+        {
+            hardDropAction.performed += OnHardDrop;
+        }
+
+        var restartAction = gameplayMap.FindAction("Restart");
+        if (restartAction != null)
+        {
+            restartAction.performed += OnRestart;
+        }
+
+        var openShopAction = gameplayMap.FindAction("OpenShop");
+        if (openShopAction != null)
+        {
+            openShopAction.performed += OnOpenShop;
+        }
     }
 
     void Update()
     {
         if (logicManager == null) return;
-
-        HandleGameInput();
-        HandleUIInput();
+        HandleContinuousMovement();
     }
 
-    private void HandleGameInput()
+    private void HandleContinuousMovement()
     {
+        if (!isMoving) return;
+
         Game gameData = logicManager.GetGameData();
         if (gameData == null || gameData.currentState != GameState.Playing) return;
 
-        // 이동 입력 (연속 입력 지원)
-        HandleMovementInput();
-
-        // 회전 입력 (한 번만)
-        if (Input.GetKeyDown(rotateKey))
+        moveTimer += Time.deltaTime;
+        if (moveTimer >= moveRepeatRate)
         {
-            logicManager.RotateTetrimino();
+            moveTimer = 0f;
+
+            if (moveInput.x < 0)
+                logicManager.MoveTetrimino(Vector2Int.left);
+            else if (moveInput.x > 0)
+                logicManager.MoveTetrimino(Vector2Int.right);
+            else if (moveInput.y < 0)
+                logicManager.MoveTetrimino(Vector2Int.down);
         }
+    }
 
-        // 하드 드롭 (한 번만)
-        if (Input.GetKeyDown(hardDropKey))
+    private void OnMoveLeft(InputAction.CallbackContext context)
+    {
+        if (!CanHandleGameInput()) return;
+
+        moveInput = Vector2.left;
+        if (!isMoving)
         {
-            logicManager.DropTetrimino();
+            isMoving = true;
+            moveTimer = 0f;
+            logicManager.MoveTetrimino(Vector2Int.left);
         }
+    }
 
-        // 소프트 드롭 (누르고 있는 동안)
-        if (Input.GetKey(downKey))
+    private void OnMoveRight(InputAction.CallbackContext context)
+    {
+        if (!CanHandleGameInput()) return;
+
+        moveInput = Vector2.right;
+        if (!isMoving)
         {
+            isMoving = true;
+            moveTimer = 0f;
+            logicManager.MoveTetrimino(Vector2Int.right);
+        }
+    }
+
+    private void OnMoveDown(InputAction.CallbackContext context)
+    {
+        if (!CanHandleGameInput()) return;
+
+        moveInput = Vector2.down;
+        if (!isMoving)
+        {
+            isMoving = true;
+            moveTimer = 0f;
             logicManager.MoveTetrimino(Vector2Int.down);
         }
     }
 
-    private void HandleMovementInput()
+    private void OnMoveStop(InputAction.CallbackContext context)
     {
-        bool leftPressed = Input.GetKey(leftKey);
-        bool rightPressed = Input.GetKey(rightKey);
+        isMoving = false;
+        moveTimer = 0f;
+        moveInput = Vector2.zero;
+    }
 
-        // 새로운 입력이 시작됨
-        if ((leftPressed || rightPressed) && !isMoving)
+    private void OnRotate(InputAction.CallbackContext context)
+    {
+        if (!CanHandleGameInput()) return;
+        logicManager.RotateTetrimino();
+    }
+
+    private void OnHardDrop(InputAction.CallbackContext context)
+    {
+        if (!CanHandleGameInput()) return;
+        logicManager.DropTetrimino();
+    }
+
+    private void OnRestart(InputAction.CallbackContext context)
+    {
+        if (logicManager == null) return;
+        logicManager.RestartGame();
+    }
+
+    private void OnOpenShop(InputAction.CallbackContext context)
+    {
+        if (logicManager == null) return;
+
+        Game gameData = logicManager.GetGameData();
+        if (gameData != null)
         {
-            isMoving = true;
-            moveTimer = 0f;
-
-            // 즉시 이동
-            if (leftPressed)
-                logicManager.MoveTetrimino(Vector2Int.left);
-            else if (rightPressed)
-                logicManager.MoveTetrimino(Vector2Int.right);
-        }
-        // 입력이 계속되고 있음
-        else if ((leftPressed || rightPressed) && isMoving)
-        {
-            moveTimer += Time.deltaTime;
-
-            if (moveTimer >= moveRepeatRate)
+            if (gameData.currentState == GameState.Victory)
             {
-                moveTimer = 0f;
-
-                if (leftPressed)
-                    logicManager.MoveTetrimino(Vector2Int.left);
-                else if (rightPressed)
-                    logicManager.MoveTetrimino(Vector2Int.right);
+                logicManager.OpenShop();
             }
-        }
-        // 입력이 끝남
-        else if (!leftPressed && !rightPressed)
-        {
-            isMoving = false;
-            moveTimer = 0f;
+            else if (gameData.currentState == GameState.Shop)
+            {
+                logicManager.CloseShop();
+            }
         }
     }
 
-    private void HandleUIInput()
+    private bool CanHandleGameInput()
     {
-        // 재시작 (언제든지 가능)
-        if (Input.GetKeyDown(restartKey))
-        {
-            logicManager.RestartGame();
-        }
+        if (logicManager == null) return false;
 
-        // ESC로 상점 열기/닫기
-        if (Input.GetKeyDown(KeyCode.Escape))
+        Game gameData = logicManager.GetGameData();
+        return gameData != null && gameData.currentState == GameState.Playing;
+    }
+
+    private void OnDestroy()
+    {
+        // Input Actions 정리
+        if (playerInput != null && playerInput.actions != null)
         {
-            Game gameData = logicManager.GetGameData();
-            if (gameData != null)
+            var gameplayMap = playerInput.actions.FindActionMap("Gameplay");
+            if (gameplayMap != null)
             {
-                if (gameData.currentState == GameState.Victory)
+                var moveLeftAction = gameplayMap.FindAction("MoveLeft");
+                if (moveLeftAction != null)
                 {
-                    logicManager.OpenShop();
+                    moveLeftAction.performed -= OnMoveLeft;
+                    moveLeftAction.canceled -= OnMoveStop;
                 }
-                else if (gameData.currentState == GameState.Shop)
+
+                var moveRightAction = gameplayMap.FindAction("MoveRight");
+                if (moveRightAction != null)
                 {
-                    logicManager.CloseShop();
+                    moveRightAction.performed -= OnMoveRight;
+                    moveRightAction.canceled -= OnMoveStop;
+                }
+
+                var moveDownAction = gameplayMap.FindAction("MoveDown");
+                if (moveDownAction != null)
+                {
+                    moveDownAction.performed -= OnMoveDown;
+                    moveDownAction.canceled -= OnMoveStop;
+                }
+
+                var rotateAction = gameplayMap.FindAction("Rotate");
+                if (rotateAction != null)
+                {
+                    rotateAction.performed -= OnRotate;
+                }
+
+                var hardDropAction = gameplayMap.FindAction("HardDrop");
+                if (hardDropAction != null)
+                {
+                    hardDropAction.performed -= OnHardDrop;
+                }
+
+                var restartAction = gameplayMap.FindAction("Restart");
+                if (restartAction != null)
+                {
+                    restartAction.performed -= OnRestart;
+                }
+
+                var openShopAction = gameplayMap.FindAction("OpenShop");
+                if (openShopAction != null)
+                {
+                    openShopAction.performed -= OnOpenShop;
                 }
             }
+        }
+    }
+
+    // 테스트용 메서드들
+    public void SimulateInput(string actionName)
+    {
+        if (playerInput == null || playerInput.actions == null) return;
+
+        var gameplayMap = playerInput.actions.FindActionMap("Gameplay");
+        if (gameplayMap == null) return;
+
+        var action = gameplayMap.FindAction(actionName);
+        if (action == null) return;
+
+        // 액션 시뮬레이션
+        switch (actionName)
+        {
+            case "MoveLeft":
+                OnMoveLeft(new InputAction.CallbackContext());
+                break;
+            case "MoveRight":
+                OnMoveRight(new InputAction.CallbackContext());
+                break;
+            case "MoveDown":
+                OnMoveDown(new InputAction.CallbackContext());
+                break;
+            case "Rotate":
+                OnRotate(new InputAction.CallbackContext());
+                break;
+            case "HardDrop":
+                OnHardDrop(new InputAction.CallbackContext());
+                break;
+            case "Restart":
+                OnRestart(new InputAction.CallbackContext());
+                break;
+            case "OpenShop":
+                OnOpenShop(new InputAction.CallbackContext());
+                break;
+        }
+    }
+
+    public void SimulateInputStop(string actionName)
+    {
+        if (actionName.StartsWith("Move"))
+        {
+            OnMoveStop(new InputAction.CallbackContext());
         }
     }
 }

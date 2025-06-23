@@ -42,7 +42,6 @@ public class Tetrimino
                 return new Vector2Int[] { new Vector2Int(0, 0) };
         }
     }
-
     public Vector2Int[] GetWorldPositions()
     {
         Vector2Int[] worldPositions = new Vector2Int[shape.Length];

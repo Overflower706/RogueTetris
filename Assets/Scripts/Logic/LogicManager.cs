@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class LogicManager : MonoBehaviour
@@ -25,12 +24,10 @@ public class LogicManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    }    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        InitializeGame();
+        Initialize();
     }
 
     // Update is called once per frame
@@ -45,16 +42,13 @@ public class LogicManager : MonoBehaviour
             tetrisLogic.UpdateAutoFall(Time.deltaTime);
         }
     }
-    private void InitializeGame()
+    public void Initialize()
     {
         gameData = new Game();
         tetrisLogic = new TetrisLogic(gameData);
         scoreLogic = new ScoreLogic(gameData);
         effectLogic = new EffectLogic(gameData);
         shopLogic = new ShopLogic(gameData, scoreLogic, effectLogic);
-
-        // 첫 번째 테트리미노 생성
-        tetrisLogic.SpawnNewTetrimino();
     }
 
     // View에서 호출할 메서드들
@@ -69,7 +63,6 @@ public class LogicManager : MonoBehaviour
         if (gameData.currentState != GameState.Playing) return;
         tetrisLogic.RotateTetrimino();
     }
-
     public void DropTetrimino()
     {
         if (gameData.currentState != GameState.Playing) return;
@@ -78,7 +71,7 @@ public class LogicManager : MonoBehaviour
 
     public void RestartGame()
     {
-        InitializeGame();
+        Initialize();
     }
 
     public void OpenShop()
