@@ -184,14 +184,15 @@ public class LogicCollisionTests
         logicManager.DropTetrimino();
 
         // Assert
-        var updatedGameData = logicManager.GetGameData();
-
-        // Drop 후 상태 로그
-        GameLogger.LogGame(updatedGameData, "After T-Block Drop into Gap");        // T블록이 틈새에 정확히 들어갔는지 확인 (y=0에 중앙 블록, y=1에 상단 블록)
-        Assert.AreEqual(2, updatedGameData.board.GetBlock(4, 0), "T블록 좌측 하단이 바닥에 고정되어야 함");
-        Assert.AreEqual(2, updatedGameData.board.GetBlock(5, 0), "T블록 중앙 하단이 바닥에 고정되어야 함");
-        Assert.AreEqual(2, updatedGameData.board.GetBlock(6, 0), "T블록 우측 하단이 바닥에 고정되어야 함");
-        Assert.AreEqual(2, updatedGameData.board.GetBlock(5, 1), "T블록 상단이 y=1에 고정되어야 함");
+        var updatedGameData = logicManager.GetGameData();        // Drop 후 상태 로그
+        GameLogger.LogGame(updatedGameData, "After T-Block Drop into Gap");
+        // T블록이 기존 블록들과 충돌하여 y=1에 착지: (4,1), (5,1), (6,1), (5,2)
+        Assert.AreEqual(1, updatedGameData.board.GetBlock(4, 0), "기존 빨강(1) 블록이 (4,0)에 유지되어야 함");
+        Assert.AreEqual(1, updatedGameData.board.GetBlock(6, 0), "기존 빨강(1) 블록이 (6,0)에 유지되어야 함");
+        Assert.AreEqual(2, updatedGameData.board.GetBlock(4, 1), "T블록 좌측이 (4,1)에 고정되어야 함");
+        Assert.AreEqual(2, updatedGameData.board.GetBlock(5, 1), "T블록 중앙이 (5,1)에 고정되어야 함");
+        Assert.AreEqual(2, updatedGameData.board.GetBlock(6, 1), "T블록 우측이 (6,1)에 고정되어야 함");
+        Assert.AreEqual(2, updatedGameData.board.GetBlock(5, 2), "T블록 상단이 (5,2)에 고정되어야 함");
     }
 
     [Test]

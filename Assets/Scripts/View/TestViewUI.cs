@@ -20,7 +20,9 @@ public class TestViewUI : MonoBehaviour
     private bool isMovingDown = false;
 
     // Input System 관련
-    private Keyboard keyboard; void Start()
+    private Keyboard keyboard;
+
+    void Start()
     {
         Debug.Log("=== TestViewUI Start 시작 ===");
 
@@ -30,6 +32,7 @@ public class TestViewUI : MonoBehaviour
 
         // LogicManager 컴포넌트 가져오기 또는 생성
         logicManager = GetComponent<LogicManager>();
+
         if (logicManager == null)
         {
             Debug.Log("LogicManager 컴포넌트 없음 - 새로 생성");
@@ -62,13 +65,9 @@ public class TestViewUI : MonoBehaviour
 
     void Update()
     {
-        // 프레임 확인용 디버그
-        Debug.Log($"[Frame {Time.frameCount}] Update 실행 중 - deltaTime: {Time.deltaTime:F3}");
-
         // AutoFall 업데이트
         if (logicManager != null)
         {
-            Debug.Log("LogicManager 발견됨 - UpdateAutoFall 호출");
             logicManager.UpdateAutoFall(Time.deltaTime);
         }
         else
