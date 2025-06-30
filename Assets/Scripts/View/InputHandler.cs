@@ -105,7 +105,7 @@ public class InputHandler : MonoBehaviour
         if (!isMoving) return;
 
         Game gameData = logicManager.GetGameData();
-        if (gameData == null || gameData.currentState != GameState.Playing) return;
+        if (gameData == null || gameData.CurrentState != GameState.Playing) return;
 
         moveTimer += Time.deltaTime;
         if (moveTimer >= moveRepeatRate)
@@ -189,11 +189,11 @@ public class InputHandler : MonoBehaviour
         Game gameData = logicManager.GetGameData();
         if (gameData != null)
         {
-            if (gameData.currentState == GameState.Victory)
+            if (gameData.CurrentState == GameState.Victory)
             {
                 logicManager.OpenShop();
             }
-            else if (gameData.currentState == GameState.Shop)
+            else if (gameData.CurrentState == GameState.Shop)
             {
                 logicManager.CloseShop();
             }
@@ -205,7 +205,7 @@ public class InputHandler : MonoBehaviour
         if (logicManager == null) return false;
 
         Game gameData = logicManager.GetGameData();
-        return gameData != null && gameData.currentState == GameState.Playing;
+        return gameData != null && gameData.CurrentState == GameState.Playing;
     }
 
     private void OnDestroy()

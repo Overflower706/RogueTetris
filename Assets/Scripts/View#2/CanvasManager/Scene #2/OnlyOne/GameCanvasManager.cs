@@ -15,6 +15,7 @@ public class GameCanvasManager : MonoBehaviour, ICanvasManager
     [SerializeField] private GameObject Panel_Game;
     [SerializeField] private Button Button_Win;
     [SerializeField] private Button Button_Lose;
+    [SerializeField] private TestViewUI TestViewUI;
 
     private RectTransform _gameRectTransform;
     private Vector2 _gameOriginalPosition;
@@ -46,6 +47,7 @@ public class GameCanvasManager : MonoBehaviour, ICanvasManager
                .OnComplete(() =>
                {
                    Canvas_Game.GetComponent<CanvasGroup>().interactable = true;
+                   TestViewUI.StartGame();
                });
     }
 

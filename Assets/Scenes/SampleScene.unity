@@ -579,7 +579,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &104202819
 RectTransform:
   m_ObjectHideFlags: 0
@@ -792,6 +792,7 @@ RectTransform:
   - {fileID: 1554092832}
   - {fileID: 104202819}
   - {fileID: 1326818515}
+  - {fileID: 1347174527}
   m_Father: {fileID: 1853690111}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1931,7 +1932,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &388047434
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6438,6 +6439,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326818514}
   m_CullTransparentMesh: 1
+--- !u!1 &1347174526
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1347174527}
+  - component: {fileID: 1347174528}
+  m_Layer: 0
+  m_Name: TestGameView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1347174527
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347174526}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -960, y: -465, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 115011124}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1347174528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347174526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c877d6c69e21814896020cf7406b79e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameStateText: {fileID: 2086140224}
+  logicManager: {fileID: 1807312436}
+  moveRepeatRate: 0.1
+  moveInitialDelay: 0.2
 --- !u!1 &1351006332
 GameObject:
   m_ObjectHideFlags: 0
@@ -7712,7 +7761,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1554092832
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9263,6 +9312,7 @@ MonoBehaviour:
   Panel_Game: {fileID: 115011123}
   Button_Win: {fileID: 1554092833}
   Button_Lose: {fileID: 104202820}
+  TestViewUI: {fileID: 1347174528}
 --- !u!114 &1781745924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9331,12 +9381,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dab3f332bda9adb4a8e99827d320353c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameData:
-    currentState: 0
-    currentScore: 0
-    targetScore: 1000
-    gameTime: 0
-    currentTetrimino:
+  GameData:
+    CurrentState: 0
+    CurrentScore: 0
+    TargetScore: 1000
+    GameTime: 0
+    CurrentTetrimino:
       type: 0
       position: {x: 0, y: 0}
       rotation: 0
@@ -9347,7 +9397,7 @@ MonoBehaviour:
         scoreMultiplier: 1
         bonusPoints: 0
         isActive: 0
-    nextTetrimino:
+    NextTetrimino:
       type: 0
       position: {x: 0, y: 0}
       rotation: 0
@@ -9358,9 +9408,9 @@ MonoBehaviour:
         scoreMultiplier: 1
         bonusPoints: 0
         isActive: 0
-    activeEffects: []
-    currency: 0
-    isShopOpen: 0
+    ActiveEffects: []
+    Currency: 0
+    IsShopOpen: 0
 --- !u!4 &1807312437
 Transform:
   m_ObjectHideFlags: 0
@@ -9701,7 +9751,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1853690111
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11270,11 +11320,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 115011124}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 500}
-  m_Pivot: {x: 0.5, y: 1}
+  m_SizeDelta: {x: 1000, y: 500}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2086140224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11297,8 +11347,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uAC8C\uC784 \uD654\uBA74"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 828ff6f3390687445bd74780603d39ad, type: 2}
-  m_sharedMaterial: {fileID: 7910988375737216277, guid: 828ff6f3390687445bd74780603d39ad, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d314ea959c27ea542ac9c5966184a550, type: 2}
+  m_sharedMaterial: {fileID: -175567537311812540, guid: d314ea959c27ea542ac9c5966184a550, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -11322,14 +11372,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 75
-  m_fontSizeBase: 75
+  m_fontSize: 25
+  m_fontSizeBase: 25
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0

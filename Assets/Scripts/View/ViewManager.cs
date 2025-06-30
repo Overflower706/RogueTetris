@@ -52,7 +52,7 @@ public class ViewManager : MonoBehaviour
     {
         if (currentGameData == null) return;
 
-        switch (currentGameData.currentState)
+        switch (currentGameData.CurrentState)
         {
             case GameState.Playing:
             case GameState.LineClearAnimation:

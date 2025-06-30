@@ -18,11 +18,12 @@ public class TestViewUI : MonoBehaviour
     private bool isMovingLeft = false;
     private bool isMovingRight = false;
     private bool isMovingDown = false;
+    private bool isGameStarted = false;
 
     // Input System 관련
     private Keyboard keyboard;
 
-    void Start()
+    public void StartGame()
     {
         Debug.Log("=== TestViewUI Start 시작 ===");
 
@@ -60,11 +61,15 @@ public class TestViewUI : MonoBehaviour
         // 초기 UI 업데이트
         UpdateUI();
 
+        isGameStarted = true;
+
         Debug.Log("=== TestViewUI 초기화 완료 ===");
     }
 
     void Update()
     {
+        if (!isGameStarted) return;
+
         // AutoFall 업데이트
         if (logicManager != null)
         {
@@ -86,7 +91,7 @@ public class TestViewUI : MonoBehaviour
         if (logicManager == null || keyboard == null) return;
 
         var gameData = logicManager.GetGameData();
-        if (gameData == null || gameData.currentState != GameState.Playing) return;
+        if (gameData == null || gameData.CurrentState != GameState.Playing) return;
 
         bool inputReceived = false;
 
@@ -101,13 +106,6 @@ public class TestViewUI : MonoBehaviour
         if (keyboard.spaceKey.wasPressedThisFrame)
         {
             logicManager.DropTetrimino();
-            inputReceived = true;
-        }
-
-        // 게임 재시작 (한 번 누르기)
-        if (keyboard.rKey.wasPressedThisFrame)
-        {
-            logicManager.RestartGame();
             inputReceived = true;
         }
 
@@ -192,29 +190,28 @@ public class TestViewUI : MonoBehaviour
         if (gameData == null) return;
 
         // 간단한 정보 + 보드만 표시
-        string gameInfo = $"Score: {gameData.currentScore}/{gameData.targetScore} | State: {gameData.currentState}\n\n";
-        string boardInfo = GameLogger.GetBoardString(gameData.board, gameData.currentTetrimino);
+        string gameInfo = $"Score: {gameData.CurrentScore}/{gameData.TargetScore} | State: {gameData.CurrentState}\n\n";
+        string boardInfo = GameLogger.GetBoardString(gameData.Board, gameData.CurrentTetrimino);
 
         // UI 텍스트 업데이트
         gameStateText.text = gameInfo + boardInfo;
 
         // 게임 오버나 승리 시 추가 정보 표시
-        if (gameData.currentState == GameState.GameOver)
+        if (gameData.CurrentState == GameState.GameOver)
         {
-            gameStateText.text += "\n\n=== 게임 오버 ===\n게임을 재시작하려면 R키를 누르세요";
+            gameStateText.text += "\n\n=== 게임 오버 ===\n";
         }
-        else if (gameData.currentState == GameState.Victory)
+        else if (gameData.CurrentState == GameState.Victory)
         {
-            gameStateText.text += "\n\n=== 승리! ===\n게임을 재시작하려면 R키를 누르세요";
+            gameStateText.text += "\n\n=== 승리! ===\n";
         }
-        else if (gameData.currentState == GameState.Playing)
+        else if (gameData.CurrentState == GameState.Playing)
         {
             gameStateText.text += "\n\n=== 조작법 ===\n" +
                                   "← → : 좌우 이동\n" +
                                   "↓ : 소프트 드롭\n" +
                                   "↑ / Z : 회전\n" +
-                                  "스페이스 : 하드 드롭\n" +
-                                  "R : 게임 재시작";
+                                  "스페이스 : 하드 드롭\n";
         }
     }
 
@@ -235,16 +232,16 @@ public class TestViewUI : MonoBehaviour
 
         // 화면 우상단에 간단한 정보 표시
         GUILayout.BeginArea(new Rect(Screen.width - 200, 10, 190, 100));
-        GUILayout.Label($"Score: {gameData.currentScore}/{gameData.targetScore}");
-        GUILayout.Label($"State: {gameData.currentState}");
-        GUILayout.Label($"Currency: {gameData.currency}");
-        if (gameData.currentTetrimino != null)
+        GUILayout.Label($"Score: {gameData.CurrentScore}/{gameData.TargetScore}");
+        GUILayout.Label($"State: {gameData.CurrentState}");
+        GUILayout.Label($"Currency: {gameData.Currency}");
+        if (gameData.CurrentTetrimino != null)
         {
-            GUILayout.Label($"Current: {gameData.currentTetrimino.type}");
+            GUILayout.Label($"Current: {gameData.CurrentTetrimino.type}");
         }
-        if (gameData.nextTetrimino != null)
+        if (gameData.NextTetrimino != null)
         {
-            GUILayout.Label($"Next: {gameData.nextTetrimino.type}");
+            GUILayout.Label($"Next: {gameData.NextTetrimino.type}");
         }
         GUILayout.EndArea();
     }

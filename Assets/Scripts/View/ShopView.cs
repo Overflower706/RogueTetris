@@ -52,7 +52,7 @@ public class ShopView : MonoBehaviour
     {
         if (currencyText != null)
         {
-            currencyText.text = $"보유 골드: {gameData.currency}";
+            currencyText.text = $"보유 골드: {gameData.Currency}";
         }
 
         if (shopTitleText != null)
@@ -106,7 +106,7 @@ public class ShopView : MonoBehaviour
 
         // 구매 가능 여부에 따른 UI 업데이트
         Game gameData = logicManager.GetGameData();
-        bool canAfford = gameData != null && gameData.currency >= item.cost;
+        bool canAfford = gameData != null && gameData.Currency >= item.cost;
 
         Image itemImage = itemObject.GetComponent<Image>();
         if (itemImage != null)
@@ -152,7 +152,7 @@ public class ShopView : MonoBehaviour
         if (purchaseButton != null)
         {
             Game gameData = logicManager?.GetGameData();
-            bool canAfford = gameData != null && gameData.currency >= selectedItem.cost;
+            bool canAfford = gameData != null && gameData.Currency >= selectedItem.cost;
             purchaseButton.interactable = canAfford;
         }
     }

@@ -117,9 +117,9 @@ public class ShopLogic
     private void ApplyTetriminoEffect(ShopItem item)
     {
         // 다음 테트리미노에 효과 적용
-        if (game.nextTetrimino != null)
+        if (game.NextTetrimino != null)
         {
-            effectLogic.ApplyTetriminoEffect(game.nextTetrimino, item.effectType, item.effectValue);
+            effectLogic.ApplyTetriminoEffect(game.NextTetrimino, item.effectType, item.effectValue);
         }
         else
         {
@@ -138,8 +138,8 @@ public class ShopLogic
         switch (item.id)
         {
             case "target_reduction":
-                game.targetScore = Mathf.RoundToInt(game.targetScore * 0.8f);
-                Debug.Log($"목표 점수가 {game.targetScore}로 감소했습니다.");
+                game.TargetScore = Mathf.RoundToInt(game.TargetScore * 0.8f);
+                Debug.Log($"목표 점수가 {game.TargetScore}로 감소했습니다.");
                 break;
         }
     }

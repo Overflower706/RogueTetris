@@ -40,24 +40,24 @@ public class GameView : MonoBehaviour
 
     private void UpdateGameBoard(Game gameData)
     {
-        if (boardRenderer != null && gameData.board != null)
+        if (boardRenderer != null && gameData.Board != null)
         {
-            boardRenderer.RenderBoard(gameData.board);
+            boardRenderer.RenderBoard(gameData.Board);
         }
     }
 
     private void UpdateTetriminos(Game gameData)
     {
         // 현재 테트리미노 렌더링
-        if (currentTetriminoRenderer != null && gameData.currentTetrimino != null)
+        if (currentTetriminoRenderer != null && gameData.CurrentTetrimino != null)
         {
-            currentTetriminoRenderer.RenderTetrimino(gameData.currentTetrimino);
+            currentTetriminoRenderer.RenderTetrimino(gameData.CurrentTetrimino);
         }
 
         // 다음 테트리미노 렌더링
-        if (nextTetriminoRenderer != null && gameData.nextTetrimino != null)
+        if (nextTetriminoRenderer != null && gameData.NextTetrimino != null)
         {
-            nextTetriminoRenderer.RenderTetrimino(gameData.nextTetrimino);
+            nextTetriminoRenderer.RenderTetrimino(gameData.NextTetrimino);
         }
     }
 
@@ -66,33 +66,33 @@ public class GameView : MonoBehaviour
         // 점수 표시
         if (scoreText != null)
         {
-            scoreText.text = $"점수: {gameData.currentScore:N0}";
+            scoreText.text = $"점수: {gameData.CurrentScore:N0}";
         }
 
         // 목표 점수 표시
         if (targetScoreText != null)
         {
-            targetScoreText.text = $"목표: {gameData.targetScore:N0}";
+            targetScoreText.text = $"목표: {gameData.TargetScore:N0}";
         }
 
         // 화폐 표시
         if (currencyText != null)
         {
-            currencyText.text = $"골드: {gameData.currency}";
+            currencyText.text = $"골드: {gameData.Currency}";
         }
 
         // 게임 시간 표시
         if (gameTimeText != null)
         {
-            int minutes = Mathf.FloorToInt(gameData.gameTime / 60f);
-            int seconds = Mathf.FloorToInt(gameData.gameTime % 60f);
+            int minutes = Mathf.FloorToInt(gameData.GameTime / 60f);
+            int seconds = Mathf.FloorToInt(gameData.GameTime % 60f);
             gameTimeText.text = $"시간: {minutes:00}:{seconds:00}";
         }
 
         // 진행도 슬라이더
         if (progressSlider != null)
         {
-            float progress = gameData.targetScore > 0 ? (float)gameData.currentScore / gameData.targetScore : 0f;
+            float progress = gameData.TargetScore > 0 ? (float)gameData.CurrentScore / gameData.TargetScore : 0f;
             progressSlider.value = Mathf.Clamp01(progress);
         }
     }
@@ -109,7 +109,7 @@ public class GameView : MonoBehaviour
         activeEffectItems.Clear();
 
         // 활성 효과들을 UI로 표시
-        foreach (ActiveEffect effect in gameData.activeEffects)
+        foreach (ActiveEffect effect in gameData.ActiveEffects)
         {
             GameObject effectItem = Instantiate(effectItemPrefab, effectsContainer);
             activeEffectItems.Add(effectItem);
@@ -139,19 +139,19 @@ public class GameView : MonoBehaviour
         // 게임 오버 패널
         if (gameOverPanel != null)
         {
-            gameOverPanel.SetActive(gameData.currentState == GameState.GameOver);
+            gameOverPanel.SetActive(gameData.CurrentState == GameState.GameOver);
         }
 
         // 승리 패널
         if (victoryPanel != null)
         {
-            victoryPanel.SetActive(gameData.currentState == GameState.Victory);
+            victoryPanel.SetActive(gameData.CurrentState == GameState.Victory);
         }
 
         // 게임 상태 텍스트
         if (gameStateText != null)
         {
-            switch (gameData.currentState)
+            switch (gameData.CurrentState)
             {
                 case GameState.Playing:
                     gameStateText.text = "";

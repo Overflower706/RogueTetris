@@ -14,13 +14,13 @@ public class EffectLogic
     public void UpdateEffects(float deltaTime)
     {
         // 모든 활성 효과들 업데이트
-        foreach (ActiveEffect effect in game.activeEffects)
+        foreach (ActiveEffect effect in game.ActiveEffects)
         {
             effect.Update(deltaTime);
         }
 
         // 만료된 효과들 제거
-        game.activeEffects.RemoveAll(effect => effect.IsExpired());
+        game.ActiveEffects.RemoveAll(effect => effect.IsExpired());
     }
 
     public void ApplyEffect(EffectType type, float duration, float value)
@@ -28,7 +28,7 @@ public class EffectLogic
         ActiveEffect newEffect = new ActiveEffect(type, duration, value);
 
         // 같은 타입의 효과가 이미 있는지 확인
-        ActiveEffect existingEffect = game.activeEffects.FirstOrDefault(e => e.type == type);
+        ActiveEffect existingEffect = game.ActiveEffects.FirstOrDefault(e => e.type == type);
 
         if (existingEffect != null)
         {
@@ -55,7 +55,7 @@ public class EffectLogic
         else
         {
             // 새로운 효과 추가
-            game.activeEffects.Add(newEffect);
+            game.ActiveEffects.Add(newEffect);
         }
 
         Debug.Log($"효과 적용: {type}, 값: {value}, 지속시간: {duration}초");
@@ -96,24 +96,24 @@ public class EffectLogic
 
     public void ClearAllEffects()
     {
-        game.activeEffects.Clear();
+        game.ActiveEffects.Clear();
         Debug.Log("모든 효과 제거");
     }
 
     public bool HasActiveEffect(EffectType type)
     {
-        return game.activeEffects.Any(effect => effect.type == type);
+        return game.ActiveEffects.Any(effect => effect.type == type);
     }
 
     public float GetEffectValue(EffectType type)
     {
-        ActiveEffect effect = game.activeEffects.FirstOrDefault(e => e.type == type);
+        ActiveEffect effect = game.ActiveEffects.FirstOrDefault(e => e.type == type);
         return effect?.value ?? 0f;
     }
 
     public float GetEffectTimeRemaining(EffectType type)
     {
-        ActiveEffect effect = game.activeEffects.FirstOrDefault(e => e.type == type);
+        ActiveEffect effect = game.ActiveEffects.FirstOrDefault(e => e.type == type);
         return effect?.timeRemaining ?? 0f;
     }
 

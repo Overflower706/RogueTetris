@@ -23,32 +23,32 @@ public static class GameLogger
 
         // 헤더
         sb.AppendLine($"=== {title} ===");
-        sb.AppendLine($"State: {game.currentState}");
-        sb.AppendLine($"Score: {game.currentScore}/{game.targetScore}");
-        sb.AppendLine($"Currency: {game.currency}");
-        sb.AppendLine($"Time: {game.gameTime:F1}s");
-        sb.AppendLine($"Shop Open: {game.isShopOpen}");
-        sb.AppendLine($"Active Effects: {game.activeEffects?.Count ?? 0}");
+        sb.AppendLine($"State: {game.CurrentState}");
+        sb.AppendLine($"Score: {game.CurrentScore}/{game.TargetScore}");
+        sb.AppendLine($"Currency: {game.Currency}");
+        sb.AppendLine($"Time: {game.GameTime:F1}s");
+        sb.AppendLine($"Shop Open: {game.IsShopOpen}");
+        sb.AppendLine($"Active Effects: {game.ActiveEffects?.Count ?? 0}");
 
         // 현재 테트리미노 정보
-        if (game.currentTetrimino != null)
+        if (game.CurrentTetrimino != null)
         {
-            sb.AppendLine($"Current Tetrimino: {game.currentTetrimino.type} at ({game.currentTetrimino.position.x}, {game.currentTetrimino.position.y}) rotation={game.currentTetrimino.rotation}");
+            sb.AppendLine($"Current Tetrimino: {game.CurrentTetrimino.type} at ({game.CurrentTetrimino.position.x}, {game.CurrentTetrimino.position.y}) rotation={game.CurrentTetrimino.rotation}");
         }
         else
         {
             sb.AppendLine("Current Tetrimino: None");
         }
 
-        if (game.nextTetrimino != null)
+        if (game.NextTetrimino != null)
         {
-            sb.AppendLine($"Next Tetrimino: {game.nextTetrimino.type}");
+            sb.AppendLine($"Next Tetrimino: {game.NextTetrimino.type}");
         }
 
         // 보드 시각화
         sb.AppendLine();
         sb.AppendLine("Board:");
-        sb.AppendLine(VisualizeBoard(game.board, game.currentTetrimino));
+        sb.AppendLine(VisualizeBoard(game.Board, game.CurrentTetrimino));
 
         Debug.Log(sb.ToString());
     }
@@ -70,13 +70,24 @@ public static class GameLogger
         if (currentTetrimino != null)
         {
             currentTetriminoPositions = currentTetrimino.GetWorldPositions();
-        }        // 상단 경계선
+        }
+
+        // Ghost piece 위치들 계산
+        Vector2Int[] ghostPiecePositions = null;
+        if (currentTetrimino != null)
+        {
+            ghostPiecePositions = CalculateGhostPiecePositions(board, currentTetrimino);
+        }
+
+        // 상단 경계선
         sb.Append("+");
         for (int x = 0; x < TetrisBoard.WIDTH; x++)
         {
             sb.Append("--");
         }
-        sb.AppendLine("+");        // 보드를 위에서부터 아래로 그리기 (y가 큰 것부터)
+        sb.AppendLine("+");
+
+        // 보드를 위에서부터 아래로 그리기 (y가 큰 것부터)
         for (int y = TetrisBoard.HEIGHT - 1; y >= 0; y--)
         {
             sb.Append("|");
@@ -85,21 +96,29 @@ public static class GameLogger
             {
                 Vector2Int pos = new Vector2Int(x, y);
                 bool isCurrentTetrimino = IsPositionInTetrimino(pos, currentTetriminoPositions);
-                bool isBoardBlock = board.grid[x, y] != 0; if (isCurrentTetrimino && isBoardBlock)
+                bool isGhostPiece = IsPositionInTetrimino(pos, ghostPiecePositions);
+                bool isBoardBlock = board.grid[x, y] != 0;
+
+                if (isCurrentTetrimino && isBoardBlock)
                 {
                     // 겹침 (충돌 상황)
-                    sb.Append("XX");
+                    sb.Append("X");
                 }
                 else if (isCurrentTetrimino)
                 {
                     // 현재 테트리미노 - 색상별 표시
                     sb.Append($"<color={GetColorName(currentTetrimino.color)}>■</color>");
                 }
+                else if (isGhostPiece && !isBoardBlock)
+                {
+                    // Ghost piece - 현재 테트리미노와 겹치지 않고 빈 공간인 경우에만 표시
+                    sb.Append($"<color={GetColorName(currentTetrimino.color)}>▤</color>");
+                }
                 else if (isBoardBlock)
                 {
                     // 고정된 블록 - 색상별 표시
                     int blockColor = board.grid[x, y];
-                    sb.Append($"<color={GetColorName(blockColor)}>▨</color>");
+                    sb.Append($"<color={GetColorName(blockColor)}>■</color>");
                 }
                 else
                 {
@@ -133,9 +152,11 @@ public static class GameLogger
         {
             sb.Append($"{x % 10} ");
         }
-        sb.AppendLine();        // 범례
         sb.AppendLine();
-        sb.AppendLine("Legend: <color=red>■</color>=빨강(1), <color=green>■</color>=초록(2), <color=blue>■</color>=파랑(3), <color=yellow>■</color>=노랑(4), XX=Collision, □=Empty");
+
+        // 범례
+        sb.AppendLine();
+        sb.AppendLine("Legend: <color=red>■</color>=현재 테트리미노, <color=red>▤</color>=떨어질 위치, <color=red>■</color>=고정 블록, X=충돌, □=빈 공간");
 
         return sb.ToString();
     }
@@ -155,6 +176,87 @@ public static class GameLogger
             }
         }
         return false;
+    }
+
+    /// <summary>
+    /// 현재 테트리미노가 떨어질 최종 위치를 계산
+    /// </summary>
+    /// <param name="board">게임 보드</param>
+    /// <param name="tetrimino">현재 테트리미노</param>
+    /// <returns>떨어질 위치의 테트리미노 블록들</returns>
+    private static Vector2Int[] CalculateGhostPiecePositions(TetrisBoard board, Tetrimino tetrimino)
+    {
+        if (board == null || tetrimino == null) return null;
+
+        // 현재 테트리미노의 회전된 로컬 위치들을 계산
+        Vector2Int[] rotatedShape = new Vector2Int[tetrimino.shape.Length];
+        for (int i = 0; i < tetrimino.shape.Length; i++)
+        {
+            rotatedShape[i] = RotatePoint(tetrimino.shape[i], tetrimino.rotation);
+        }
+
+        // 현재 위치에서 아래로 떨어뜨려 봄
+        Vector2Int testPosition = tetrimino.position;
+
+        // 아래로 계속 떨어뜨려서 충돌할 때까지 반복
+        while (true)
+        {
+            testPosition.y--;
+
+            // 이 위치에서 충돌하는지 확인
+            bool collision = false;
+            foreach (var localPos in rotatedShape)
+            {
+                Vector2Int worldPos = testPosition + localPos;
+
+                // 보드 경계 확인
+                if (worldPos.y < 0 || worldPos.x < 0 || worldPos.x >= TetrisBoard.WIDTH)
+                {
+                    collision = true;
+                    break;
+                }
+
+                // 다른 블록과 충돌 확인
+                if (worldPos.y < TetrisBoard.HEIGHT && board.grid[worldPos.x, worldPos.y] != 0)
+                {
+                    collision = true;
+                    break;
+                }
+            }
+
+            // 충돌했다면 이전 위치가 최종 위치
+            if (collision)
+            {
+                testPosition.y++; // 한 칸 위로 되돌림
+                break;
+            }
+        }
+
+        // 최종 위치에서의 블록 위치들 계산
+        Vector2Int[] ghostPositions = new Vector2Int[rotatedShape.Length];
+        for (int i = 0; i < rotatedShape.Length; i++)
+        {
+            ghostPositions[i] = testPosition + rotatedShape[i];
+        }
+
+        return ghostPositions;
+    }
+
+    /// <summary>
+    /// 점을 주어진 회전 수만큼 시계방향으로 회전
+    /// </summary>
+    /// <param name="point">회전할 점</param>
+    /// <param name="rotation">회전 수 (90도 단위)</param>
+    /// <returns>회전된 점</returns>
+    private static Vector2Int RotatePoint(Vector2Int point, int rotation)
+    {
+        for (int i = 0; i < rotation; i++)
+        {
+            int temp = point.x;
+            point.x = point.y;
+            point.y = -temp;
+        }
+        return point;
     }
 
     /// <summary>
@@ -213,30 +315,30 @@ public static class GameLogger
 
         // 헤더
         sb.AppendLine($"=== {title} ===");
-        sb.AppendLine($"State: {game.currentState}");
-        sb.AppendLine($"Score: {game.currentScore}/{game.targetScore}");
-        sb.AppendLine($"Currency: {game.currency}");
-        sb.AppendLine($"Time: {game.gameTime:F1}s");
-        sb.AppendLine($"Shop Open: {game.isShopOpen}");
-        sb.AppendLine($"Active Effects: {game.activeEffects?.Count ?? 0}");
+        sb.AppendLine($"State: {game.CurrentState}");
+        sb.AppendLine($"Score: {game.CurrentScore}/{game.TargetScore}");
+        sb.AppendLine($"Currency: {game.Currency}");
+        sb.AppendLine($"Time: {game.GameTime:F1}s");
+        sb.AppendLine($"Shop Open: {game.IsShopOpen}");
+        sb.AppendLine($"Active Effects: {game.ActiveEffects?.Count ?? 0}");
 
         // 현재 테트리미노 정보
-        if (game.currentTetrimino != null)
+        if (game.CurrentTetrimino != null)
         {
-            sb.AppendLine($"Current Tetrimino: {game.currentTetrimino.type} at ({game.currentTetrimino.position.x}, {game.currentTetrimino.position.y}) rotation={game.currentTetrimino.rotation}");
+            sb.AppendLine($"Current Tetrimino: {game.CurrentTetrimino.type} at ({game.CurrentTetrimino.position.x}, {game.CurrentTetrimino.position.y}) rotation={game.CurrentTetrimino.rotation}");
         }
         else
         {
             sb.AppendLine("Current Tetrimino: None");
         }
 
-        if (game.nextTetrimino != null)
+        if (game.NextTetrimino != null)
         {
-            sb.AppendLine($"Next Tetrimino: {game.nextTetrimino.type}");
+            sb.AppendLine($"Next Tetrimino: {game.NextTetrimino.type}");
         }        // 보드 시각화
         sb.AppendLine();
         sb.AppendLine("Board:");
-        sb.Append(VisualizeBoard(game.board, game.currentTetrimino));
+        sb.Append(VisualizeBoard(game.Board, game.CurrentTetrimino));
 
         return sb.ToString();
     }
@@ -251,27 +353,16 @@ public static class GameLogger
     {
         return VisualizeBoard(board, currentTetrimino);
     }
-    private static string GetColorSymbol(int color)
-    {
-        switch (color)
-        {
-            case 1: return "<color=red>■■</color>"; // 빨강
-            case 2: return "<color=green>■■</color>"; // 초록
-            case 3: return "<color=blue>■■</color>"; // 파랑
-            case 4: return "<color=yellow>■■</color>"; // 노랑
-            default: return "▨▨"; // 알 수 없는 색상 (고정된 블록 기호)
-        }
-    }
 
     private static string GetColorName(int color)
     {
         switch (color)
         {
-            case 1: return "red";
-            case 2: return "green";
-            case 3: return "blue";
-            case 4: return "yellow";
-            default: return "white";
+            case 1: return "#8B0000"; // 진한 빨강 (DarkRed)
+            case 2: return "#006400"; // 진한 초록 (DarkGreen)
+            case 3: return "#000080"; // 진한 파랑 (Navy)
+            case 4: return "#B8860B"; // 진한 노랑 (DarkGoldenrod)
+            default: return "#2F2F2F"; // 진한 회색
         }
     }
 }

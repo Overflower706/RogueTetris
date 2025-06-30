@@ -5,33 +5,33 @@ using System.Collections.Generic;
 public class Game
 {
     // 게임 상태
-    public GameState currentState;
-    public int currentScore;
-    public int targetScore;
-    public float gameTime;
+    public GameState CurrentState;
+    public int CurrentScore;
+    public int TargetScore;
+    public float GameTime;
 
     // 테트리스 보드
-    public TetrisBoard board;
+    public TetrisBoard Board;
 
     // 현재 테트리미노
-    public Tetrimino currentTetrimino;
-    public Tetrimino nextTetrimino;
+    public Tetrimino CurrentTetrimino;
+    public Tetrimino NextTetrimino;
 
     // 파워업/효과
-    public List<ActiveEffect> activeEffects;
+    public List<ActiveEffect> ActiveEffects;
 
     // 상점 관련
-    public int currency;
-    public bool isShopOpen;
+    public int Currency;
+    public bool IsShopOpen;
 
     public Game()
     {
-        board = new TetrisBoard();
-        activeEffects = new List<ActiveEffect>();
-        currentState = GameState.Playing;
-        targetScore = 1000; // 기본 목표 점수
-        currency = 0;
-        isShopOpen = false;
+        Board = new TetrisBoard();
+        ActiveEffects = new List<ActiveEffect>();
+        CurrentState = GameState.Playing;
+        TargetScore = 1000; // 기본 목표 점수
+        Currency = 0;
+        IsShopOpen = false;
     }
 }
 

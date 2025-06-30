@@ -15,41 +15,41 @@ public class TetrisLogic
     public void SpawnNewTetrimino()
     {
         // 다음 테트리미노가 있으면 현재로 이동, 없으면 새로 생성
-        if (game.nextTetrimino != null)
+        if (game.NextTetrimino != null)
         {
-            game.currentTetrimino = game.nextTetrimino;
+            game.CurrentTetrimino = game.NextTetrimino;
         }
         else
         {
-            game.currentTetrimino = GenerateRandomTetrimino();
+            game.CurrentTetrimino = GenerateRandomTetrimino();
         }
 
         // 테트리미노를 스폰 위치에 배치 (상단 중앙)
-        game.currentTetrimino.position = new Vector2Int(TetrisBoard.WIDTH / 2 - 1, TetrisBoard.HEIGHT - 2);
+        game.CurrentTetrimino.position = new Vector2Int(TetrisBoard.WIDTH / 2 - 1, TetrisBoard.HEIGHT - 2);
 
         // 새로운 다음 테트리미노 생성
-        game.nextTetrimino = GenerateRandomTetrimino();
+        game.NextTetrimino = GenerateRandomTetrimino();
 
         // 게임 오버 체크 - 스폰 위치에서 배치할 수 없으면 게임 오버
-        if (!CanPlaceTetrimino(game.currentTetrimino))
+        if (!CanPlaceTetrimino(game.CurrentTetrimino))
         {
-            game.currentState = GameState.GameOver;
+            game.CurrentState = GameState.GameOver;
         }
     }
 
     public void MoveTetrimino(Vector2Int direction)
     {
-        if (game.currentTetrimino == null) return;
+        if (game.CurrentTetrimino == null) return;
 
-        Vector2Int newPosition = game.currentTetrimino.position + direction;
-        Vector2Int oldPosition = game.currentTetrimino.position;
+        Vector2Int newPosition = game.CurrentTetrimino.position + direction;
+        Vector2Int oldPosition = game.CurrentTetrimino.position;
 
-        game.currentTetrimino.position = newPosition;
+        game.CurrentTetrimino.position = newPosition;
 
-        if (!CanPlaceTetrimino(game.currentTetrimino))
+        if (!CanPlaceTetrimino(game.CurrentTetrimino))
         {
             // 이동할 수 없으면 원래 위치로 복구
-            game.currentTetrimino.position = oldPosition;
+            game.CurrentTetrimino.position = oldPosition;
 
             // 아래로 이동이 불가능하면 테트리미노 고정
             if (direction.y < 0)
@@ -61,35 +61,35 @@ public class TetrisLogic
 
     public void RotateTetrimino()
     {
-        if (game.currentTetrimino == null) return;
+        if (game.CurrentTetrimino == null) return;
 
-        int oldRotation = game.currentTetrimino.rotation;
-        game.currentTetrimino.rotation = (game.currentTetrimino.rotation + 1) % 4;
+        int oldRotation = game.CurrentTetrimino.rotation;
+        game.CurrentTetrimino.rotation = (game.CurrentTetrimino.rotation + 1) % 4;
 
-        if (!CanPlaceTetrimino(game.currentTetrimino))
+        if (!CanPlaceTetrimino(game.CurrentTetrimino))
         {
             // 회전할 수 없으면 원래 회전 상태로 복구
-            game.currentTetrimino.rotation = oldRotation;
+            game.CurrentTetrimino.rotation = oldRotation;
         }
     }
 
     public void HardDrop()
     {
-        if (game.currentTetrimino == null) return;
+        if (game.CurrentTetrimino == null) return;
 
-        while (CanPlaceTetrimino(game.currentTetrimino))
+        while (CanPlaceTetrimino(game.CurrentTetrimino))
         {
-            game.currentTetrimino.position += Vector2Int.down;
+            game.CurrentTetrimino.position += Vector2Int.down;
         }
 
         // 마지막 유효한 위치로 되돌리기
-        game.currentTetrimino.position += Vector2Int.up;
+        game.CurrentTetrimino.position += Vector2Int.up;
         PlaceTetrimino();
     }
 
     public void SoftDrop()
     {
-        if (game.currentTetrimino == null) return;
+        if (game.CurrentTetrimino == null) return;
 
         // 한 칸 아래로 이동 시도
         MoveTetrimino(Vector2Int.down);
@@ -106,7 +106,8 @@ public class TetrisLogic
         {
             SoftDrop(); // MoveTetrimino 대신 SoftDrop 사용
         }
-    }    private Tetrimino GenerateRandomTetrimino()
+    }
+    private Tetrimino GenerateRandomTetrimino()
     {
         TetriminoType[] types = { TetriminoType.I, TetriminoType.O, TetriminoType.T,
                                  TetriminoType.S, TetriminoType.Z, TetriminoType.J, TetriminoType.L };
@@ -121,23 +122,24 @@ public class TetrisLogic
 
         foreach (Vector2Int pos in positions)
         {
-            if (!game.board.IsValidPosition(pos))
+            if (!game.Board.IsValidPosition(pos))
             {
                 return false;
             }
         }
 
         return true;
-    }    private void PlaceTetrimino()
+    }
+    private void PlaceTetrimino()
     {
-        if (game.currentTetrimino == null) return;
+        if (game.CurrentTetrimino == null) return;
 
-        Vector2Int[] positions = game.currentTetrimino.GetWorldPositions();
+        Vector2Int[] positions = game.CurrentTetrimino.GetWorldPositions();
 
         // 보드에 테트리미노 블록 배치 (color 속성 사용)
         foreach (Vector2Int pos in positions)
         {
-            game.board.PlaceBlock(pos, game.currentTetrimino.color);
+            game.Board.PlaceBlock(pos, game.CurrentTetrimino.color);
         }
 
         // 라인 클리어 체크
@@ -153,7 +155,7 @@ public class TetrisLogic
         // 아래쪽부터 체크
         for (int y = 0; y < TetrisBoard.HEIGHT; y++)
         {
-            if (game.board.IsLineFull(y))
+            if (game.Board.IsLineFull(y))
             {
                 clearedLines.Add(y);
             }
@@ -163,19 +165,19 @@ public class TetrisLogic
         {
             // 점수 계산 (ScoreLogic에 위임)
             ScoreLogic scoreLogic = new ScoreLogic(game);
-            scoreLogic.ProcessLineClears(clearedLines.Count, game.currentTetrimino);
+            scoreLogic.ProcessLineClears(clearedLines.Count, game.CurrentTetrimino);
 
             // 라인 클리어 실행 - 위쪽부터 역순으로 클리어 (인덱스 꼬임 방지)
             clearedLines.Sort((a, b) => b.CompareTo(a)); // 내림차순 정렬
             foreach (int line in clearedLines)
             {
-                game.board.ClearLine(line);
+                game.Board.ClearLine(line);
             }
 
             // 승리 조건 체크
-            if (game.currentScore >= game.targetScore)
+            if (game.CurrentScore >= game.TargetScore)
             {
-                game.currentState = GameState.Victory;
+                game.CurrentState = GameState.Victory;
             }
         }
     }

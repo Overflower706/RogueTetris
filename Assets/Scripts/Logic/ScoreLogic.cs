@@ -36,10 +36,10 @@ public class ScoreLogic
         int finalScore = Mathf.RoundToInt(baseScore * totalMultiplier) + bonusPoints;
 
         // 점수 적용
-        game.currentScore += finalScore;
+        game.CurrentScore += finalScore;
 
         // 화폐 획득 (점수의 10%)
-        game.currency += Mathf.RoundToInt(finalScore * 0.1f);
+        game.Currency += Mathf.RoundToInt(finalScore * 0.1f);
 
         Debug.Log($"라인 클리어! 기본점수: {baseScore}, 배율: {totalMultiplier:F2}, 보너스: {bonusPoints}, 최종: {finalScore}");
     }
@@ -101,7 +101,7 @@ public class ScoreLogic
     {
         float multiplier = 1.0f;
 
-        foreach (ActiveEffect effect in game.activeEffects)
+        foreach (ActiveEffect effect in game.ActiveEffects)
         {
             if (effect.type == EffectType.ScoreMultiplier)
             {
@@ -116,7 +116,7 @@ public class ScoreLogic
     {
         int bonus = 0;
 
-        foreach (ActiveEffect effect in game.activeEffects)
+        foreach (ActiveEffect effect in game.ActiveEffects)
         {
             if (effect.type == EffectType.BonusPoints)
             {
@@ -130,14 +130,14 @@ public class ScoreLogic
     // 상점에서 사용할 메서드
     public bool CanAfford(int cost)
     {
-        return game.currency >= cost;
+        return game.Currency >= cost;
     }
 
     public bool SpendCurrency(int amount)
     {
         if (CanAfford(amount))
         {
-            game.currency -= amount;
+            game.Currency -= amount;
             return true;
         }
         return false;

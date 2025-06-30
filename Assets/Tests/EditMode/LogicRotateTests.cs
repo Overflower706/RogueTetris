@@ -38,7 +38,7 @@ public class LogicRotateTests
         var testTetrimino = new Tetrimino(TetriminoType.T, 1); // 빨간색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0; // 초기 회전 상태
-        gameData.currentTetrimino = testTetrimino;
+        gameData.CurrentTetrimino = testTetrimino;
 
         var initialRotation = testTetrimino.rotation;
 
@@ -54,7 +54,7 @@ public class LogicRotateTests
 
         Assert.IsNotNull(updatedGameData, "Game data should be available after rotation");
 
-        var currentTetrimino = updatedGameData.currentTetrimino;
+        var currentTetrimino = updatedGameData.CurrentTetrimino;
         Assert.IsNotNull(currentTetrimino, "Current tetrimino should exist");
         Assert.AreEqual((initialRotation + 1) % 4, currentTetrimino.rotation,
             "Tetrimino rotation should increase by 1 (mod 4)");
@@ -66,7 +66,7 @@ public class LogicRotateTests
         var testTetrimino = new Tetrimino(TetriminoType.I, 2); // 초록색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0; // 가로 상태
-        gameData.currentTetrimino = testTetrimino;
+        gameData.CurrentTetrimino = testTetrimino;
 
         // 초기 상태 확인 (가로: 4,5,6,7)
         var initialPositions = testTetrimino.GetWorldPositions();
@@ -83,7 +83,7 @@ public class LogicRotateTests
         // 첫 번째 회전 후 상태 로그
         GameLogger.LogGame(rotatedGameData, "After I-Block First Rotation");
 
-        var rotatedTetrimino = rotatedGameData.currentTetrimino;
+        var rotatedTetrimino = rotatedGameData.CurrentTetrimino;
         Assert.AreEqual(1, rotatedTetrimino.rotation, "I블록이 90도 회전해야 함"); var rotatedPositions = rotatedTetrimino.GetWorldPositions();
         // 세로 상태에서는 y축으로 배치됨: [(5,11), (5,10), (5,9), (5,8)]
         Assert.Contains(new Vector2Int(5, 11), rotatedPositions, "I블록 회전 후 - 위");
@@ -98,7 +98,7 @@ public class LogicRotateTests
         var testTetrimino = new Tetrimino(TetriminoType.T, 3); // 파란색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0;
-        gameData.currentTetrimino = testTetrimino;
+        gameData.CurrentTetrimino = testTetrimino;
 
         // 초기 T 모양 확인: ㅗ
         var initialPositions = testTetrimino.GetWorldPositions();
@@ -114,28 +114,28 @@ public class LogicRotateTests
         logicManager.RotateTetrimino();
         var rotation1Data = logicManager.GetGameData();
         GameLogger.LogGame(rotation1Data, "After T-Block First Rotation (90도)");
-        var rotation1 = rotation1Data.currentTetrimino;
+        var rotation1 = rotation1Data.CurrentTetrimino;
         Assert.AreEqual(1, rotation1.rotation, "첫 번째 회전 후 rotation = 1");
 
         // Act & Assert - 두 번째 회전 (180도): ㅜ
         logicManager.RotateTetrimino();
         var rotation2Data = logicManager.GetGameData();
         GameLogger.LogGame(rotation2Data, "After T-Block Second Rotation (180도)");
-        var rotation2 = rotation2Data.currentTetrimino;
+        var rotation2 = rotation2Data.CurrentTetrimino;
         Assert.AreEqual(2, rotation2.rotation, "두 번째 회전 후 rotation = 2");
 
         // Act & Assert - 세 번째 회전 (270도): ㅓ
         logicManager.RotateTetrimino();
         var rotation3Data = logicManager.GetGameData();
         GameLogger.LogGame(rotation3Data, "After T-Block Third Rotation (270도)");
-        var rotation3 = rotation3Data.currentTetrimino;
+        var rotation3 = rotation3Data.CurrentTetrimino;
         Assert.AreEqual(3, rotation3.rotation, "세 번째 회전 후 rotation = 3");
 
         // Act & Assert - 네 번째 회전 (360도 = 0도): 원래 상태로 복귀
         logicManager.RotateTetrimino();
         var rotation4Data = logicManager.GetGameData();
         GameLogger.LogGame(rotation4Data, "After T-Block Fourth Rotation (360도 = 0도)");
-        var rotation4 = rotation4Data.currentTetrimino;
+        var rotation4 = rotation4Data.CurrentTetrimino;
         Assert.AreEqual(0, rotation4.rotation, "네 번째 회전 후 rotation = 0 (원래 상태)");
 
         var finalPositions = rotation4.GetWorldPositions();
@@ -152,7 +152,7 @@ public class LogicRotateTests
         var testTetrimino = new Tetrimino(TetriminoType.O, 4); // 노란색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0;
-        gameData.currentTetrimino = testTetrimino;// 초기 위치 확인: [(5,10), (6,10), (5,11), (6,11)]
+        gameData.CurrentTetrimino = testTetrimino;// 초기 위치 확인: [(5,10), (6,10), (5,11), (6,11)]
         var initialPositions = testTetrimino.GetWorldPositions();
         Assert.AreEqual(4, initialPositions.Length, "O블록 초기에 4개 위치");
         Assert.Contains(new Vector2Int(5, 10), initialPositions, "초기 (5,10) 위치");
@@ -172,7 +172,7 @@ public class LogicRotateTests
         // 회전 후 상태 로그
         GameLogger.LogGame(rotatedGameData, "After O-Block Rotation");
 
-        var rotatedTetrimino = rotatedGameData.currentTetrimino;
+        var rotatedTetrimino = rotatedGameData.CurrentTetrimino;
         Assert.AreEqual(1, rotatedTetrimino.rotation, "O블록도 rotation 값은 증가해야 함");
 
         var rotatedPositions = rotatedTetrimino.GetWorldPositions();
@@ -200,7 +200,7 @@ public class LogicRotateTests
         var testTetrimino = new Tetrimino(TetriminoType.J, 1); // 빨간색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0;
-        gameData.currentTetrimino = testTetrimino;
+        gameData.CurrentTetrimino = testTetrimino;
 
         // 초기 J 모양 확인
         var initialPositions = testTetrimino.GetWorldPositions();
@@ -221,7 +221,7 @@ public class LogicRotateTests
         // 회전 후 상태 로그
         GameLogger.LogGame(rotatedGameData, "After J-Block Rotation");
 
-        var rotatedTetrimino = rotatedGameData.currentTetrimino;
+        var rotatedTetrimino = rotatedGameData.CurrentTetrimino;
         Assert.AreEqual(1, rotatedTetrimino.rotation, "J블록이 90도 회전해야 함");
 
         var rotatedPositions = rotatedTetrimino.GetWorldPositions();
@@ -237,7 +237,7 @@ public class LogicRotateTests
         var testTetrimino = new Tetrimino(TetriminoType.L, 2); // 초록색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0;
-        gameData.currentTetrimino = testTetrimino;
+        gameData.CurrentTetrimino = testTetrimino;
 
         // 초기 L 모양 확인
         var initialPositions = testTetrimino.GetWorldPositions();
@@ -258,7 +258,7 @@ public class LogicRotateTests
         // 회전 후 상태 로그
         GameLogger.LogGame(rotatedGameData, "After L-Block Rotation");
 
-        var rotatedTetrimino = rotatedGameData.currentTetrimino;
+        var rotatedTetrimino = rotatedGameData.CurrentTetrimino;
         Assert.AreEqual(1, rotatedTetrimino.rotation, "L블록이 90도 회전해야 함");
     }
     [Test]
@@ -268,7 +268,7 @@ public class LogicRotateTests
         var testTetrimino = new Tetrimino(TetriminoType.S, 3); // 파란색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0;
-        gameData.currentTetrimino = testTetrimino;
+        gameData.CurrentTetrimino = testTetrimino;
 
         var initialRotation = testTetrimino.rotation;
 
@@ -284,7 +284,7 @@ public class LogicRotateTests
         // 회전 후 상태 로그
         GameLogger.LogGame(rotatedGameData, "After S-Block Rotation");
 
-        var rotatedTetrimino = rotatedGameData.currentTetrimino;
+        var rotatedTetrimino = rotatedGameData.CurrentTetrimino;
         Assert.AreEqual((initialRotation + 1) % 4, rotatedTetrimino.rotation, "S블록이 회전해야 함");
     }
     [Test]
@@ -294,7 +294,7 @@ public class LogicRotateTests
         var testTetrimino = new Tetrimino(TetriminoType.Z, 4); // 노란색
         testTetrimino.position = new Vector2Int(5, 10);
         testTetrimino.rotation = 0;
-        gameData.currentTetrimino = testTetrimino;
+        gameData.CurrentTetrimino = testTetrimino;
 
         var initialRotation = testTetrimino.rotation;
 
@@ -310,7 +310,7 @@ public class LogicRotateTests
         // 회전 후 상태 로그
         GameLogger.LogGame(rotatedGameData, "After Z-Block Rotation");
 
-        var rotatedTetrimino = rotatedGameData.currentTetrimino;
+        var rotatedTetrimino = rotatedGameData.CurrentTetrimino;
         Assert.AreEqual((initialRotation + 1) % 4, rotatedTetrimino.rotation, "Z블록이 회전해야 함");
     }
     [Test]
@@ -320,7 +320,7 @@ public class LogicRotateTests
         var testTetrimino = new Tetrimino(TetriminoType.I, 1); // 빨간색
         testTetrimino.position = new Vector2Int(0, 10); // 벽 근처에 배치
         testTetrimino.rotation = 0; // 가로 상태
-        gameData.currentTetrimino = testTetrimino;
+        gameData.CurrentTetrimino = testTetrimino;
 
         var initialRotation = testTetrimino.rotation;
         var initialPositions = testTetrimino.GetWorldPositions();
@@ -337,7 +337,7 @@ public class LogicRotateTests
         // 회전 후 상태 로그
         GameLogger.LogGame(updatedGameData, "After Blocked I-Block Rotation");
 
-        var currentTetrimino = updatedGameData.currentTetrimino;
+        var currentTetrimino = updatedGameData.CurrentTetrimino;
 
         // 회전이 성공했거나 실패했거나 둘 중 하나
         Assert.IsTrue(currentTetrimino.rotation == initialRotation ||
@@ -351,7 +351,7 @@ public class LogicRotateTests
         var testTetrimino = new Tetrimino(TetriminoType.T, 2); // 초록색
         testTetrimino.position = new Vector2Int(1, 10); // 왼쪽 경계 근처
         testTetrimino.rotation = 0;
-        gameData.currentTetrimino = testTetrimino;
+        gameData.CurrentTetrimino = testTetrimino;
 
         // 시작 상태 로그
         GameLogger.LogGame(gameData, "Before Boundary T-Block Rotation");
@@ -365,7 +365,7 @@ public class LogicRotateTests
         // 회전 후 상태 로그
         GameLogger.LogGame(updatedGameData, "After Boundary T-Block Rotation");
 
-        var currentTetrimino = updatedGameData.currentTetrimino;
+        var currentTetrimino = updatedGameData.CurrentTetrimino;
         Assert.IsNotNull(currentTetrimino, "경계에서 회전 후에도 테트리미노 존재");
 
         var positions = currentTetrimino.GetWorldPositions();

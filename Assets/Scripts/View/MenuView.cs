@@ -57,7 +57,7 @@ public class MenuView : MonoBehaviour
         // 제목 텍스트
         if (titleText != null)
         {
-            switch (gameData.currentState)
+            switch (gameData.CurrentState)
             {
                 case GameState.GameOver:
                     titleText.text = "게임 오버";
@@ -74,7 +74,7 @@ public class MenuView : MonoBehaviour
         // 결과 텍스트
         if (resultText != null)
         {
-            switch (gameData.currentState)
+            switch (gameData.CurrentState)
             {
                 case GameState.GameOver:
                     resultText.text = "목표 점수에 도달하지 못했습니다.";
@@ -91,20 +91,20 @@ public class MenuView : MonoBehaviour
         // 최종 점수
         if (finalScoreText != null)
         {
-            finalScoreText.text = $"최종 점수: {gameData.currentScore:N0}";
+            finalScoreText.text = $"최종 점수: {gameData.CurrentScore:N0}";
         }
 
         // 목표 점수
         if (targetScoreText != null)
         {
-            targetScoreText.text = $"목표 점수: {gameData.targetScore:N0}";
+            targetScoreText.text = $"목표 점수: {gameData.TargetScore:N0}";
         }
 
         // 게임 시간
         if (finalTimeText != null)
         {
-            int minutes = Mathf.FloorToInt(gameData.gameTime / 60f);
-            int seconds = Mathf.FloorToInt(gameData.gameTime % 60f);
+            int minutes = Mathf.FloorToInt(gameData.GameTime / 60f);
+            int seconds = Mathf.FloorToInt(gameData.GameTime % 60f);
             finalTimeText.text = $"플레이 시간: {minutes:00}:{seconds:00}";
         }
     }
@@ -114,13 +114,13 @@ public class MenuView : MonoBehaviour
         // 게임 오버 패널
         if (gameOverPanel != null)
         {
-            gameOverPanel.SetActive(gameData.currentState == GameState.GameOver);
+            gameOverPanel.SetActive(gameData.CurrentState == GameState.GameOver);
         }
 
         // 승리 패널
         if (victoryPanel != null)
         {
-            victoryPanel.SetActive(gameData.currentState == GameState.Victory);
+            victoryPanel.SetActive(gameData.CurrentState == GameState.Victory);
         }
     }
 
@@ -129,7 +129,7 @@ public class MenuView : MonoBehaviour
         // 상점 버튼은 승리 상태에서만 활성화
         if (shopButton != null)
         {
-            shopButton.gameObject.SetActive(gameData.currentState == GameState.Victory);
+            shopButton.gameObject.SetActive(gameData.CurrentState == GameState.Victory);
         }
 
         // 다시 시작 버튼은 항상 활성화

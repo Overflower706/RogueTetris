@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class LogicManager : MonoBehaviour
 {
-    [SerializeField] private Game gameData;
+    public Game GameData;
     // Logic 모듈들
     private TetrisLogic tetrisLogic;
     private ScoreLogic scoreLogic;
@@ -12,11 +12,11 @@ public class LogicManager : MonoBehaviour
 
     public void Initialize()
     {
-        gameData = new Game();
-        tetrisLogic = new TetrisLogic(gameData);
-        scoreLogic = new ScoreLogic(gameData);
-        effectLogic = new EffectLogic(gameData);
-        shopLogic = new ShopLogic(gameData, scoreLogic, effectLogic);
+        GameData = new Game();
+        tetrisLogic = new TetrisLogic(GameData);
+        scoreLogic = new ScoreLogic(GameData);
+        effectLogic = new EffectLogic(GameData);
+        shopLogic = new ShopLogic(GameData, scoreLogic, effectLogic);
 
         // 게임 시작
         StartGame();
@@ -25,33 +25,33 @@ public class LogicManager : MonoBehaviour
     // View에서 호출할 메서드들
     public void MoveTetrimino(Vector2Int direction)
     {
-        if (gameData.currentState != GameState.Playing) return;
+        if (GameData.CurrentState != GameState.Playing) return;
         tetrisLogic.MoveTetrimino(direction);
     }
 
     public void RotateTetrimino()
     {
-        if (gameData.currentState != GameState.Playing) return;
+        if (GameData.CurrentState != GameState.Playing) return;
         tetrisLogic.RotateTetrimino();
     }
     public void SoftDrop()
     {
-        if (gameData.currentState != GameState.Playing) return;
+        if (GameData.CurrentState != GameState.Playing) return;
         tetrisLogic.SoftDrop();
     }
 
     public void DropTetrimino()
     {
-        if (gameData.currentState != GameState.Playing) return;
+        if (GameData.CurrentState != GameState.Playing) return;
         tetrisLogic.HardDrop();
     }
     public void RestartGame()
     {
         // Logic 모듈들 다시 초기화
-        tetrisLogic = new TetrisLogic(gameData);
-        scoreLogic = new ScoreLogic(gameData);
-        effectLogic = new EffectLogic(gameData);
-        shopLogic = new ShopLogic(gameData, scoreLogic, effectLogic);
+        tetrisLogic = new TetrisLogic(GameData);
+        scoreLogic = new ScoreLogic(GameData);
+        effectLogic = new EffectLogic(GameData);
+        shopLogic = new ShopLogic(GameData, scoreLogic, effectLogic);
 
         // 게임 재시작
         StartGame();
@@ -59,21 +59,21 @@ public class LogicManager : MonoBehaviour
 
     public void OpenShop()
     {
-        if (gameData.currentState == GameState.Victory)
+        if (GameData.CurrentState == GameState.Victory)
         {
-            gameData.currentState = GameState.Shop;
-            gameData.isShopOpen = true;
+            GameData.CurrentState = GameState.Shop;
+            GameData.IsShopOpen = true;
         }
     }
 
     public void CloseShop()
     {
-        if (gameData.currentState == GameState.Shop)
+        if (GameData.CurrentState == GameState.Shop)
         {
-            gameData.currentState = GameState.Playing;
-            gameData.isShopOpen = false;
+            GameData.CurrentState = GameState.Playing;
+            GameData.IsShopOpen = false;
             // 새로운 라운드 시작
-            gameData.targetScore = Mathf.RoundToInt(gameData.targetScore * 1.5f); // 목표 점수 증가
+            GameData.TargetScore = Mathf.RoundToInt(GameData.TargetScore * 1.5f); // 목표 점수 증가
         }
     }
 
@@ -89,14 +89,14 @@ public class LogicManager : MonoBehaviour
     }
 
     // View가 읽을 Game 데이터 접근자
-    public Game GetGameData() => gameData;
+    public Game GetGameData() => GameData;
 
     // View에서 호출할 Update 메서드 (매 프레임)
     public void UpdateAutoFall(float deltaTime)
     {
-        if (gameData != null && gameData.currentState == GameState.Playing)
+        if (GameData != null && GameData.CurrentState == GameState.Playing)
         {
-            gameData.gameTime += deltaTime;
+            GameData.GameTime += deltaTime;
             effectLogic.UpdateEffects(deltaTime);
 
             // 자동 낙하 처리
@@ -107,15 +107,15 @@ public class LogicManager : MonoBehaviour
     public void StartGame()
     {
         // 게임 초기 설정
-        gameData.currentState = GameState.Playing;
-        gameData.currentScore = 0;
-        gameData.targetScore = 1000; // 초기 목표 점수
-        gameData.currency = 0;
-        gameData.gameTime = 0f;
-        gameData.isShopOpen = false;
+        GameData.CurrentState = GameState.Playing;
+        GameData.CurrentScore = 0;
+        GameData.TargetScore = 1000; // 초기 목표 점수
+        GameData.Currency = 0;
+        GameData.GameTime = 0f;
+        GameData.IsShopOpen = false;
 
         // 보드 초기화
-        gameData.board.Clear();
+        GameData.Board.Clear();
 
         // 첫 번째 테트리미노 생성
         if (tetrisLogic != null)
@@ -123,6 +123,6 @@ public class LogicManager : MonoBehaviour
             tetrisLogic.SpawnNewTetrimino();
         }
 
-        Debug.Log("게임 시작! 목표 점수: " + gameData.targetScore);
+        Debug.Log("게임 시작! 목표 점수: " + GameData.TargetScore);
     }
 }
